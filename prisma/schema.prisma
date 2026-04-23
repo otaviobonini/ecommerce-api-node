@@ -1,0 +1,111 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Get a free hosted Postgres database in seconds: `npx create-db`
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+
+model User {
+  userId Int @id @default(autoincrement())
+  username String 
+  email String @unique
+  hashedPassword String
+  role Role @default(USER)
+  order Order[]
+  cart Cart?
+  address Address[]
+
+}
+
+model Address {
+  addressId  Int    @id @default(autoincrement())
+  userId     Int
+  street     String
+  city       String
+  state      String
+  zipCode    String
+  isDefault  Boolean @default(false)
+
+  user User @relation(onDelete: Cascade, fields: [userId], references: [userId])
+  orders Order[]
+}
+
+model Product {
+  productId Int @id @default(autoincrement())
+  productName String
+  productPrice Decimal
+  stock Int @default(0)
+
+  carts CartItem[]
+  orders OrderItem[]
+}
+
+model Cart {
+  cartId Int @id @default(autoincrement())
+  userId Int @unique
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  
+  user User @relation(onDelete: Cascade,references: [userId], fields: [userId])
+  cartItems CartItem[]
+}
+
+model CartItem {
+  cartItemId Int @id @default(autoincrement())
+  cartId Int
+  productId Int
+  quantity Int
+
+  cart Cart @relation(onDelete: Cascade, references: [cartId], fields: [cartId])
+  product Product @relation(onDelete: Cascade, references: [productId], fields: [productId])
+  @@unique([cartId, productId])
+}
+
+model Order {
+  orderId Int @id @default(autoincrement())
+  userId Int
+  addressId Int
+  status Status @default(PENDING)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  total Decimal
+  paymentLink String?
+
+  user User @relation(onDelete: Cascade,references: [userId], fields: [userId])
+  address Address @relation(references: [addressId], fields: [addressId])
+  orderItems OrderItem[]
+}
+
+model OrderItem {
+  orderItemId Int @id @default(autoincrement())
+  productId Int
+  quantity Int
+  orderId Int
+  priceAtTime Decimal
+
+   product Product @relation(onDelete: Cascade, references: [productId], fields: [productId])
+   order Order @relation(onDelete: Cascade, references: [orderId], fields: [orderId])
+   @@unique([orderId, productId])
+}
+
+enum Status {
+  PENDING
+  PAID
+  ONGOING
+  DELIVERED
+  CANCELLED
+
+}
+
+enum Role {
+  USER
+  ADMIN
+}
