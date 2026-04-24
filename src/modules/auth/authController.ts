@@ -1,5 +1,5 @@
 import { CreateUserInput, LoginUserInput } from "../../schemas/auth.schema.js";
-import AuthService from "./authService.js";
+import AuthService from "./AuthService.js";
 import { Request, Response } from "express";
 
 class AuthController {

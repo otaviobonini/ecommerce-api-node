@@ -8,11 +8,11 @@ export const authMiddleware = (
 ) => {
   const authHeader = req.headers.authorization;
   if (!authHeader) {
-    return res.status(401).json({ error: "message" });
+    return res.status(401).json({ error: "Invalid token" });
   }
   const auth = authHeader.split(" ");
   if (auth[0] !== "Bearer" || !auth[1]) {
-    return res.status(401).json({ error: "message" });
+    return res.status(401).json({ error: "Invalid token" });
   }
   try {
     if (!process.env.JWT_SECRET) {

@@ -26,4 +26,19 @@ export class AuthRepository {
     });
     return user;
   }
+  async findUserById(id: number) {
+    const user = await prisma.user.findUnique({
+      where: { userId: id },
+      select: {
+        address: true,
+        cart: true,
+        email: true,
+        order: true,
+        role: true,
+        userId: true,
+        username: true,
+      },
+    });
+    return user;
+  }
 }
