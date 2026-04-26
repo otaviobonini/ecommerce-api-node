@@ -26,7 +26,7 @@ class ProductController {
     }
     const data: CreateProductInput = req.body;
     const product = await this.service.editProduct(data, userId, productId);
-    return res.status(201).json(product);
+    return res.status(200).json(product);
   }
   async deleteProduct(req: Request, res: Response) {
     let productId = Number(req.params.productId);

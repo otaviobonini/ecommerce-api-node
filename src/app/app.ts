@@ -9,7 +9,6 @@ import authRoutes from "../modules/auth/auth.routes.js";
 import productRoutes from "../modules/products/product.routes.js";
 import { AuthLimiter } from "../utils/rateLimit.js";
 import { authMiddleware } from "../middlewares/authMiddleware.js";
-import { adminMiddleware } from "../middlewares/adminMiddleware.js";
 
 const app = express();
 
@@ -18,7 +17,7 @@ app.use(helmet());
 app.use(cors());
 app.use("/", AuthLimiter, authRoutes);
 app.use(authMiddleware);
-app.use(adminMiddleware);
+
 app.use("/", productRoutes);
 
 app.use(prismaErrorHandler);
