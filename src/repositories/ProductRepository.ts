@@ -16,7 +16,11 @@ export class ProductRepository {
     return product;
   }
   async deleteProduct(productId: number) {
-    const product = await prisma.product.deleteMany({ where: { productId } });
+    const product = await prisma.product.delete({ where: { productId } });
     return product;
+  }
+  async getProducts() {
+    const products = await prisma.product.findMany();
+    return products;
   }
 }

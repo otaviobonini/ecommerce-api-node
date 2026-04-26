@@ -15,9 +15,6 @@ class ProductService {
       throw new AppError(404, "User not found");
     }
 
-    if (user.role !== "ADMIN") {
-      throw new AppError(403, "User do not have permission to perform action");
-    }
     const product = await this.product.createProduct(data);
     return product;
   }
@@ -27,9 +24,18 @@ class ProductService {
     if (!user) {
       throw new AppError(404, "User not found");
     }
+    const product = await this.product.editProduct(data, productId);
+    return product;
+  }
+  async deleteProduct(productId: number) {
+    const product = await this.product.deleteProduct(productId);
 
-    if (user.role !== "ADMIN") {
-      throw new AppError(403, "User do not have permission to perform action");
-    }
+    return product;
+  }
+  async listProducts() {
+    const products = await this.product.getProducts();
+    return products;
   }
 }
+
+export default ProductService;

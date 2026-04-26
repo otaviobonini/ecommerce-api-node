@@ -1,4 +1,4 @@
-import AuthController from "./authController.js";
+import AuthController from "./AuthController.js";
 import { Router } from "express";
 import { validateRequest } from "../../middlewares/validate.js";
 import {

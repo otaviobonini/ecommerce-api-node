@@ -4,6 +4,7 @@ import { CreateUserInput, LoginUserInput } from "../../schemas/auth.schema.js";
 import bcrypt from "bcrypt";
 import { CreateUserDTO } from "../../types/auth.types.js";
 import jwt from "jsonwebtoken";
+import { env } from "../../schemas/env.schema.js";
 
 class AuthService {
   constructor(private database: AuthRepository) {}
@@ -34,13 +35,14 @@ class AuthService {
     if (!validatePassword) {
       throw new AppError(401, "Invalid email or password");
     }
-    if (!process.env.JWT_SECRET) {
-      throw new AppError(500, "Undefined JWT_SECRET");
-    }
 
-    const token = jwt.sign({ id: userExists.userId }, process.env.JWT_SECRET, {
-      expiresIn: "7d",
-    });
+    const token = jwt.sign(
+      { id: userExists.userId, role: userExists.role },
+      env.JWT_SECRET,
+      {
+        expiresIn: "7d",
+      },
+    );
     return {
       id: userExists.userId,
       email: userExists.email,

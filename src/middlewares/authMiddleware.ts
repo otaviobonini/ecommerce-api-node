@@ -1,5 +1,6 @@
 import { Request, Response, NextFunction } from "express";
 import jwt, { JwtPayload } from "jsonwebtoken";
+import { env } from "../schemas/env.schema.js";
 
 export const authMiddleware = (
   req: Request,
@@ -15,11 +16,9 @@ export const authMiddleware = (
     return res.status(401).json({ error: "Invalid token" });
   }
   try {
-    if (!process.env.JWT_SECRET) {
-      throw new Error("Undefined JWT_SECRET");
-    }
-    const decoded = jwt.verify(auth[1], process.env.JWT_SECRET) as JwtPayload;
+    const decoded = jwt.verify(auth[1], env.JWT_SECRET) as JwtPayload;
     req.userId = decoded.id;
+    req.userRole = decoded.role;
     next();
   } catch (error) {
     return res.status(401).json({ error: "Invalid token" });
