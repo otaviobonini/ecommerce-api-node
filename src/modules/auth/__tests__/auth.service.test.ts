@@ -88,7 +88,7 @@ describe("Auth Service tests", () => {
     await expect(result).rejects.toHaveProperty("statusCode", 401);
   });
   test("Should fail if user not found", async () => {
-    authRepositoryMock.findUserByEmail(null as never);
+    authRepositoryMock.findUserByEmail.mockResolvedValue(null);
     const result = service.login(CreateUserInputData);
     await expect(result).rejects.toBeInstanceOf(AppError);
     await expect(result).rejects.toHaveProperty("statusCode", 401);
