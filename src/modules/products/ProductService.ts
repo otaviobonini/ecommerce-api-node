@@ -29,10 +29,8 @@ class ProductService {
   }
   async deleteProduct(productId: number) {
     const product = await this.product.deleteProduct(productId);
-    if (product.count === 0) {
-      throw new AppError(404, "Product not found");
-    }
-    return;
+
+    return product;
   }
   async listProducts() {
     const products = await this.product.getProducts();

@@ -1,4 +1,4 @@
-import AuthController from "./authController.js";
+import AuthController from "./AuthController.js";
 import { Router } from "express";
 import { validateRequest } from "../../middlewares/validate.js";
 import {
@@ -7,7 +7,6 @@ import {
 } from "../../schemas/auth.schema.js";
 import AuthService from "./AuthService.js";
 import { AuthRepository } from "../../repositories/AuthRepository.js";
-import { xDownloadOptions } from "helmet";
 
 const Controller = new AuthController(new AuthService(new AuthRepository()));
 
