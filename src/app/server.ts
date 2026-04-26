@@ -1,6 +1,6 @@
+import "dotenv/config";
 import { env } from "../schemas/env.schema.js";
 import app from "./app.js";
-import "dotenv/config";
 
 const PORT = env.PORT ?? 3000;
 

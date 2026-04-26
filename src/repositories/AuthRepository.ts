@@ -1,8 +1,8 @@
 import { prisma } from "../database/prisma.js";
-import { CreateUserDTO } from "../types/auth.types.js";
+import { CreateUserDTO, CreateUserReponse } from "../types/auth.types.js";
 
 export class AuthRepository {
-  async createUser(data: CreateUserDTO) {
+  async createUser(data: CreateUserDTO): Promise<CreateUserReponse> {
     const user = await prisma.user.create({
       data: data,
       select: { userId: true, username: true, email: true },
