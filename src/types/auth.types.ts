@@ -3,3 +3,9 @@ export type CreateUserDTO = {
   hashedPassword: string;
   email: string;
 };
+
+export type CreateUserReponse = {
+  userId: number;
+  username: string;
+  email: string;
+};
