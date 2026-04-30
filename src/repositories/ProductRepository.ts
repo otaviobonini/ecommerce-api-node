@@ -1,14 +1,14 @@
 import { prisma } from "../database/prisma.js";
-import { CreateProductDTO } from "../types/product.types.js";
+import { CreateProductInput } from "../schemas/product.schema.js";
 
 export class ProductRepository {
-  async createProduct(data: CreateProductDTO) {
+  async createProduct(data: CreateProductInput) {
     const product = await prisma.product.create({
       data: data,
     });
     return product;
   }
-  async editProduct(data: CreateProductDTO, productId: number) {
+  async editProduct(data: CreateProductInput, productId: number) {
     const product = await prisma.product.update({
       where: { productId: productId },
       data: data,
@@ -22,5 +22,8 @@ export class ProductRepository {
   async getProducts() {
     const products = await prisma.product.findMany();
     return products;
+  }
+  async findProductById(productId: number) {
+    return await prisma.product.findUnique({ where: { productId } });
   }
 }

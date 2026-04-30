@@ -5,3 +5,15 @@ export const AuthLimiter = rateLimit({
   max: 50,
   message: "Too many requests, please try again later.",
 });
+
+export const ProductLimiter = rateLimit({
+  windowMs: 10 * 60 * 1000, // 10 minutes
+  max: 50,
+  message: "Too many requests, please try again later.",
+});
+
+export const CartLimiter = rateLimit({
+  windowMs: 5 * 60 * 1000, // 5 minutes
+  max: 100,
+  message: "Too many requests, please try again later.",
+});

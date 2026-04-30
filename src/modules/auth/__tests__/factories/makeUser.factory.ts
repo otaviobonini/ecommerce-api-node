@@ -1,5 +1,5 @@
 import { CreateUserInput } from "../../../../schemas/auth.schema.js";
-import { CreateUserReponse } from "../../../../types/auth.types.js";
+import { CreateUserResponse } from "../../../../types/auth.types.js";
 
 export const CreateUserInputData: CreateUserInput = {
   email: "test@gmail.com",
@@ -7,7 +7,7 @@ export const CreateUserInputData: CreateUserInput = {
   password: "password",
 };
 
-export const CreatedUser: CreateUserReponse = {
+export const CreatedUser: CreateUserResponse = {
   userId: 1,
   username: "test",
   email: "test@gmail.com",

@@ -2,8 +2,8 @@ import z from "zod";
 
 export const CreateProductSchema = z.object({
   productName: z.string(),
-  productPrice: z.coerce.number().min(0),
-  stock: z.coerce.number().min(0),
+  productPrice: z.coerce.number().int().positive(),
+  stock: z.coerce.number().int().positive(),
 });
 
 export const EditProductSchema = CreateProductSchema.partial();

@@ -21,7 +21,7 @@ describe("Product Controller test", () => {
   test("Should create product successfully", async () => {
     const req = {
       body: {
-        productName: "Produto Teste",
+        productName: "Product Test",
         productPrice: 99.9,
         stock: 10,
       },
@@ -37,7 +37,7 @@ describe("Product Controller test", () => {
 
     await controller.createProduct(req, res);
 
-    expect(productServiceMock.createProduct).toHaveBeenCalled();
+    expect(productServiceMock.createProduct).toHaveBeenCalledWith(req.body);
     expect(res.status).toHaveBeenCalledWith(201);
     expect(res.json).toHaveBeenCalled();
   });
@@ -45,7 +45,7 @@ describe("Product Controller test", () => {
   test("Should edit product successfully", async () => {
     const req = {
       body: {
-        productName: "Produto Editado",
+        productName: "Product edit test",
         productPrice: 150,
         stock: 5,
       },
@@ -64,7 +64,7 @@ describe("Product Controller test", () => {
 
     await controller.editProduct(req, res);
 
-    expect(productServiceMock.editProduct).toHaveBeenCalled();
+    expect(productServiceMock.editProduct).toHaveBeenCalledWith(req.body, 1);
     expect(res.status).toHaveBeenCalledWith(200);
     expect(res.json).toHaveBeenCalled();
   });
@@ -85,7 +85,7 @@ describe("Product Controller test", () => {
 
     await controller.deleteProduct(req, res);
 
-    expect(productServiceMock.deleteProduct).toHaveBeenCalled();
+    expect(productServiceMock.deleteProduct).toHaveBeenCalledWith(1);
     expect(res.status).toHaveBeenCalledWith(204);
   });
 
@@ -104,18 +104,6 @@ describe("Product Controller test", () => {
     expect(productServiceMock.listProducts).toHaveBeenCalled();
     expect(res.status).toHaveBeenCalledWith(200);
     expect(res.json).toHaveBeenCalled();
-  });
-  test("Should throw error if user is not authenticated", async () => {
-    const req = {
-      body: {},
-      userId: undefined,
-    } as unknown as Request;
-
-    const res = {} as Response;
-
-    await expect(controller.createProduct(req, res)).rejects.toThrow(
-      "Not Authenticated",
-    );
   });
   test("Should throw error if productId is invalid", async () => {
     const req = {

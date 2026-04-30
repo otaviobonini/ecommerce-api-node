@@ -12,7 +12,7 @@ import { AuthRepository } from "../../repositories/AuthRepository.js";
 import { adminMiddleware } from "../../middlewares/adminMiddleware.js";
 
 const Controller = new ProductController(
-  new ProductService(new ProductRepository(), new AuthRepository()),
+  new ProductService(new ProductRepository()),
 );
 
 const router = Router();
