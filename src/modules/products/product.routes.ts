@@ -1,6 +1,10 @@
 import { Router } from "express";
 import ProductController from "./ProductController.js";
-import { CreateProductSchema } from "../../schemas/product.schema.js";
+import {
+  CreateProductSchema,
+  EditProductSchema,
+  ProductIdParamSchema,
+} from "../../schemas/product.schema.js";
 import { validateRequest } from "../../middlewares/validate.js";
 import ProductService from "./ProductService.js";
 import { ProductRepository } from "../../repositories/ProductRepository.js";
@@ -23,12 +27,15 @@ router.post(
 router.delete(
   "/product/:productId",
   adminMiddleware,
+  validateRequest(ProductIdParamSchema, "params"),
   Controller.deleteProduct.bind(Controller),
 );
 
 router.patch(
   "/product/:productId",
   adminMiddleware,
+  validateRequest(ProductIdParamSchema, "params"),
+  validateRequest(EditProductSchema, "body"),
   Controller.editProduct.bind(Controller),
 );
 
