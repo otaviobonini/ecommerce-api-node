@@ -1,45 +1,48 @@
 import { AppError } from "../../common/AppError.js";
+import { CreateCartItemInput } from "../../schemas/cart.schema.js";
 import CartService from "./CartService.js";
 import { Request, Response } from "express";
 
 class CartController {
   constructor(private service: CartService) {}
-  async CreateCart(req: Request, res: Response) {
+  async createCart(req: Request, res: Response) {
     const userId = req.userId;
     if (!userId) {
       throw new AppError(403, "Unauthorized");
     }
-    const cart = this.service.CreateCart(userId);
+    const cart = await this.service.createCart(userId);
     return res.status(201).json(cart);
   }
-  async GetCart(req: Request, res: Response) {
+  async getCart(req: Request, res: Response) {
     const userId = req.userId;
     if (!userId) {
       throw new AppError(403, "Unauthorized");
     }
-    const cart = this.service.GetCart(userId);
+    const cart = await this.service.getCart(userId);
     return res.status(200).json(cart);
   }
-  async ClearCart(req: Request, res: Response) {
+  async clearCart(req: Request, res: Response) {
     const cartId = Number(req.params.cartId);
     if (!cartId) {
-      return res.status(200);
+      return res.status(400);
     }
-    const cart = this.service.CleanCart(cartId);
+    const cart = await this.service.cleanCart(cartId);
     return res.status(200).json(cart);
   }
-  async CreateCartItem(req: Request, res: Response) {
-    const data = req.body;
-    const cartItem = this.service.CreateCartItem(data);
+  async createCartItem(req: Request, res: Response) {
+    const data = req.body as CreateCartItemInput;
+    const cartItem = await this.service.createCartItem(data);
     return res.status(201).json(cartItem);
   }
-  async GetCartItem(req: Request, res: Response) {
+  async getCartItem(req: Request, res: Response) {
     const cartId = Number(req.params.cartId);
-    this.service.GetCartItem(cartId);
+    const cartItem = await this.service.getCartItem(cartId);
+    return res.status(200).json(cartItem);
   }
-  async DeleteCartItem(req: Request, res: Response) {
-    const cartItemId = Number(req.params.cartId);
-    this.service.DeleteCartItem(cartItemId);
+  async deleteCartItem(req: Request, res: Response) {
+    const cartItemId = Number(req.params.cartItemId);
+    await this.service.deleteCartItem(cartItemId);
+    return res.status(204);
   }
 }
 
