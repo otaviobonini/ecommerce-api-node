@@ -1,5 +1,5 @@
 import { CartRepository } from "../../repositories/CartRepository.js";
-import { CreateCartDTO, CreateCartItemDTO } from "../../types/cart.types.js";
+import { CreateCartItemDTO } from "../../types/cart.types.js";
 import { AppError } from "../../common/AppError.js";
 import { ProductRepository } from "../../repositories/ProductRepository.js";
 
