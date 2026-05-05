@@ -1,7 +1,6 @@
 import z from "zod";
 
 export const CreateAddressSchema = z.object({
-  userId: z.number(),
   street: z.string().max(255),
   city: z.string().max(100),
   state: z.string().max(100),

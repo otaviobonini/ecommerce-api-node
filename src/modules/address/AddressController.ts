@@ -5,8 +5,9 @@ import { CreateAddressInput } from "../../schemas/address.schema.js";
 export class AddressController {
   constructor(private address: AddressService) {}
   async createAddress(req: Request, res: Response) {
+    const userId = Number(req.userId);
     const data = req.body;
-    const address = await this.address.createAddress(data);
+    const address = await this.address.createAddress(data, userId);
     return res.status(201).json(address);
   }
   async getUserAddresses(req: Request, res: Response) {

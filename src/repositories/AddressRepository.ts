@@ -2,9 +2,9 @@ import { prisma } from "../database/prisma.js";
 import { CreateAddressInput } from "../schemas/address.schema.js";
 
 export class AddressRepository {
-  async createAddress(data: CreateAddressInput) {
+  async createAddress(data: CreateAddressInput, userId: number) {
     const address = await prisma.address.create({
-      data: data,
+      data: { ...data, userId },
     });
     return address;
   }
