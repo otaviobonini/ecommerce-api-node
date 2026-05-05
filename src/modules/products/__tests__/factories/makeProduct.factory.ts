@@ -1,8 +1,8 @@
-import { CreateProductDTO } from "../../../../types/product.types.js";
 import { Decimal } from "@prisma/client/runtime/library";
+import { CreateProductInput } from "../../../../schemas/product.schema.js";
 
 export type Role = "ADMIN" | "USER";
-export const CreateProductInputData: CreateProductDTO = {
+export const CreateProductInputData: CreateProductInput = {
   productName: "test",
   productPrice: 20,
   stock: 2,

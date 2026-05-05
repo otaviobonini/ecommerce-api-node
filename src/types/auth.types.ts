@@ -4,7 +4,7 @@ export type CreateUserDTO = {
   email: string;
 };
 
-export type CreateUserReponse = {
+export type CreateUserResponse = {
   userId: number;
   username: string;
   email: string;

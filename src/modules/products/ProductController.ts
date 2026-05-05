@@ -7,12 +7,8 @@ class ProductController {
   constructor(private service: ProductService) {}
 
   async createProduct(req: Request, res: Response) {
-    const userId = req.userId;
-    if (!userId) {
-      throw new AppError(401, "Not Authenticated");
-    }
     const data: CreateProductInput = req.body;
-    const product = await this.service.createProduct(data, userId);
+    const product = await this.service.createProduct(data);
     return res.status(201).json(product);
   }
   async editProduct(req: Request, res: Response) {
@@ -25,7 +21,7 @@ class ProductController {
       throw new AppError(401, "Not Authenticated");
     }
     const data: CreateProductInput = req.body;
-    const product = await this.service.editProduct(data, userId, productId);
+    const product = await this.service.editProduct(data, productId);
     return res.status(200).json(product);
   }
   async deleteProduct(req: Request, res: Response) {

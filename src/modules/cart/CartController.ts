@@ -23,26 +23,38 @@ class CartController {
   }
   async clearCart(req: Request, res: Response) {
     const cartId = Number(req.params.cartId);
-    if (!cartId) {
-      return res.status(400);
-    }
-    const cart = await this.service.cleanCart(cartId);
-    return res.status(200).json(cart);
+    const userId = Number(req.userId);
+    await this.service.cleanCart(cartId, userId);
+    return res.status(204).send();
   }
   async createCartItem(req: Request, res: Response) {
     const data = req.body as CreateCartItemInput;
-    const cartItem = await this.service.createCartItem(data);
+    const userId = Number(req.userId);
+    const cartItem = await this.service.createCartItem(data, userId);
     return res.status(201).json(cartItem);
   }
   async getCartItem(req: Request, res: Response) {
     const cartId = Number(req.params.cartId);
-    const cartItem = await this.service.getCartItem(cartId);
+    const userId = Number(req.userId);
+    const cartItem = await this.service.getCartItem(cartId, userId);
     return res.status(200).json(cartItem);
   }
   async deleteCartItem(req: Request, res: Response) {
     const cartItemId = Number(req.params.cartItemId);
-    await this.service.deleteCartItem(cartItemId);
-    return res.status(204);
+    const userId = Number(req.userId);
+    await this.service.deleteCartItem(cartItemId, userId);
+    return res.status(204).send();
+  }
+  async cartQuantityItem(req: Request, res: Response) {
+    const cartItemId = Number(req.params.cartItemId);
+    const userId = Number(req.userId);
+    const quantity = req.body.quantity;
+    const product = await this.service.cartQuantityItem(
+      cartItemId,
+      quantity,
+      userId,
+    );
+    return res.status(201).json(product);
   }
 }
 

@@ -15,9 +15,13 @@ export const CartItemIdParamSchema = z.object({
 });
 
 export const CreateCartItemSchema = z.object({
-  cartId: z.coerce.number().min(1),
-  productId: z.coerce.number().min(1),
-  quantity: z.coerce.number().min(1).default(1),
+  cartId: z.coerce.number().int().positive(),
+  productId: z.coerce.number().int().positive(),
+  quantity: z.coerce.number().int().positive(),
+});
+
+export const UpdateCartItemQuantitySchema = z.object({
+  quantity: z.coerce.number().int().positive(),
 });
 
 export type CreateCartItemInput = z.infer<typeof CreateCartItemSchema>;
