@@ -1,6 +1,6 @@
 import { Router } from "express";
 import { AddressController } from "./AddressController.js";
-import { AddressService } from "./addressService.js";
+import { AddressService } from "./AddressService.js";
 import { AddressRepository } from "../../repositories/AddressRepository.js";
 import { validateRequest } from "../../middlewares/validate.js";
 import {

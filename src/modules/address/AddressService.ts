@@ -1,6 +1,9 @@
 import { AppError } from "../../common/AppError.js";
 import { AddressRepository } from "../../repositories/AddressRepository.js";
-import { CreateAddressInput } from "../../schemas/address.schema.js";
+import {
+  CreateAddressInput,
+  EditAddressInput,
+} from "../../schemas/address.schema.js";
 
 export class AddressService {
   constructor(private address: AddressRepository) {}
@@ -33,11 +36,7 @@ export class AddressService {
     }
     await this.address.setDefaultAddress(userId, addressId);
   }
-  async editAddress(
-    addressId: number,
-    userId: number,
-    data: Partial<CreateAddressInput>,
-  ) {
+  async editAddress(addressId: number, userId: number, data: EditAddressInput) {
     const existingAddress = await this.address.getAddressById(addressId);
     if (!existingAddress) throw new AppError(404, "Address not found");
     if (existingAddress.userId !== userId)

@@ -8,7 +8,12 @@ export const CreateAddressSchema = z.object({
   isDefault: z.boolean().default(false),
 });
 
-export const EditAddressSchema = CreateAddressSchema.partial();
+export const EditAddressSchema = CreateAddressSchema.partial().transform(
+  (data) =>
+    Object.fromEntries(
+      Object.entries(data).filter(([_, v]) => v !== undefined),
+    ),
+);
 
 export const AddressIdParamSchema = z.object({
   addressId: z

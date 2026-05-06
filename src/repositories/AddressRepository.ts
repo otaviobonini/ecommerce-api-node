@@ -1,5 +1,8 @@
 import { prisma } from "../database/prisma.js";
-import { CreateAddressInput } from "../schemas/address.schema.js";
+import {
+  CreateAddressInput,
+  EditAddressInput,
+} from "../schemas/address.schema.js";
 
 export class AddressRepository {
   async createAddress(data: CreateAddressInput, userId: number) {
@@ -37,7 +40,7 @@ export class AddressRepository {
       });
     });
   }
-  async editAddress(addressId: number, data: Partial<CreateAddressInput>) {
+  async editAddress(addressId: number, data: EditAddressInput) {
     const address = await prisma.address.update({
       where: { addressId },
       data: data,
