@@ -30,7 +30,9 @@ class ProductController {
     return res.status(204).json(product);
   }
   async listProducts(req: Request, res: Response) {
-    const products = await this.service.listProducts();
+    let limit = Number(req.query.limit);
+    let offset = Number(req.query.offset);
+    const products = await this.service.listProducts(limit, offset);
     return res.status(200).json(products);
   }
 }

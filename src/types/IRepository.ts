@@ -5,7 +5,12 @@ import {
   EditAddressInput,
 } from "../schemas/address.schema.js";
 
-import { CreateUserDTO, CreateUserResponse } from "./auth.types.js";
+import {
+  CreateUserDTO,
+  CreateUserResponse,
+  SafeUser,
+  UserWithRelations,
+} from "./auth.types.js";
 
 import { CreateProductInput } from "../schemas/product.schema.js";
 
@@ -14,9 +19,9 @@ export interface IAuthRepository {
 
   findUserByEmail(email: string): Promise<User | null>;
 
-  findUserByEmailWithoutPassword(email: string): Promise<User | null>;
+  findUserByEmailWithoutPassword(email: string): Promise<SafeUser | null>;
 
-  findUserById(id: number): Promise<User | null>;
+  findUserById(id: number): Promise<UserWithRelations | null>;
 }
 
 export interface IAddressRepository {
@@ -73,7 +78,7 @@ export interface IProductRepository {
 
   deleteProduct(productId: number): Promise<Product>;
 
-  getProducts(): Promise<Product[]>;
+  getProducts(limit: number, offset: number): Promise<Product[]>;
 
   findProductById(productId: number): Promise<Product | null>;
 }

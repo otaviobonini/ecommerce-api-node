@@ -17,8 +17,10 @@ class ProductService {
     const product = await this.product.deleteProduct(productId);
     return product;
   }
-  async listProducts() {
-    const products = await this.product.getProducts();
+  async listProducts(limit?: number, offset?: number) {
+    if (limit === undefined) limit = 10;
+    if (offset === undefined) offset = 0;
+    const products = await this.product.getProducts(limit, offset);
     return products;
   }
 }

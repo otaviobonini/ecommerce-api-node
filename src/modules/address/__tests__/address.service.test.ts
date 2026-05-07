@@ -134,7 +134,7 @@ describe("AddressService", () => {
       addressId,
       userId,
     });
-    const result = await service.editAddress(addressId, userId, data);
+    await service.editAddress(addressId, userId, data);
     expect(mockAddressRepository.getAddressById).toHaveBeenCalledWith(
       addressId,
     );

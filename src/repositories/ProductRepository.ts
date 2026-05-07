@@ -19,8 +19,11 @@ export class ProductRepository {
     const product = await prisma.product.delete({ where: { productId } });
     return product;
   }
-  async getProducts() {
-    const products = await prisma.product.findMany();
+  async getProducts(limit = 10, offset = 0) {
+    const products = await prisma.product.findMany({
+      take: limit,
+      skip: offset,
+    });
     return products;
   }
   async findProductById(productId: number) {

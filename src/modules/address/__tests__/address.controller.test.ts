@@ -59,7 +59,7 @@ describe("Address Controller tests", () => {
   test("Should delete an address", async () => {
     const req = {
       userId: 1,
-      params: { addressId: "1" },
+      params: { addressId: 1 },
     } as unknown as Request;
     const res = {
       status: jest.fn().mockReturnThis(),
@@ -75,7 +75,7 @@ describe("Address Controller tests", () => {
   test("Should set default address", async () => {
     const req = {
       userId: 1,
-      params: { addressId: "1" },
+      params: { addressId: 1 },
     } as unknown as Request;
     const res = {
       status: jest.fn().mockReturnThis(),
@@ -97,7 +97,7 @@ describe("Address Controller tests", () => {
     };
     const req = {
       userId: 1,
-      params: { addressId: "1" },
+      params: { addressId: 1 },
       body,
     } as unknown as Request;
     const res = {

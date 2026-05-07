@@ -1,4 +1,4 @@
-import { describe, it, expect, jest, beforeEach } from "@jest/globals";
+import { describe, expect, jest, beforeEach } from "@jest/globals";
 import ProductService from "../ProductService.js";
 import {
   CreateProductInputData,
