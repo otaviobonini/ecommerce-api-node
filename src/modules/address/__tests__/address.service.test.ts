@@ -1,8 +1,8 @@
-import { AddressRepository } from "../../../repositories/AddressRepository.js";
+import { IAddressRepository } from "../../../types/IRepository.js";
 import { AddressService } from "../AddressService.js";
 import { CreateAddressInputFakeData } from "./factories/makeAddress.factory.js";
 
-const mockAddressRepository: jest.Mocked<AddressRepository> = {
+const mockAddressRepository: jest.Mocked<IAddressRepository> = {
   createAddress: jest.fn(),
   getUserAddresses: jest.fn(),
   getAddressById: jest.fn(),

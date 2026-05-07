@@ -1,8 +1,8 @@
-import { ProductRepository } from "../../repositories/ProductRepository.js";
 import { CreateProductInput } from "../../schemas/product.schema.js";
+import { IProductRepository } from "../../types/IRepository.js";
 
 class ProductService {
-  constructor(private product: ProductRepository) {}
+  constructor(private product: IProductRepository) {}
 
   async createProduct(data: CreateProductInput) {
     const product = await this.product.createProduct(data);

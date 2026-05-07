@@ -1,10 +1,12 @@
 import CartService from "../CartService.js";
-import { CartRepository } from "../../../repositories/CartRepository.js";
-import { ProductRepository } from "../../../repositories/ProductRepository.js";
 import { cartObject, userId } from "./factories/cart.factory.js";
 import { ProductData } from "../../products/__tests__/factories/makeProduct.factory.js";
+import {
+  ICartRepository,
+  IProductRepository,
+} from "../../../types/IRepository.js";
 
-export const cartRepositoryMock: jest.Mocked<CartRepository> = {
+export const cartRepositoryMock: jest.Mocked<ICartRepository> = {
   createCart: jest.fn(),
   upsertCartItem: jest.fn(),
   findCartItem: jest.fn(),
@@ -17,7 +19,7 @@ export const cartRepositoryMock: jest.Mocked<CartRepository> = {
   findCartItemById: jest.fn(),
 };
 
-const productRepositoryMock: jest.Mocked<ProductRepository> = {
+const productRepositoryMock: jest.Mocked<IProductRepository> = {
   createProduct: jest.fn(),
   editProduct: jest.fn(),
   deleteProduct: jest.fn(),

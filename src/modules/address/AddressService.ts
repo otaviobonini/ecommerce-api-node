@@ -1,12 +1,13 @@
 import { AppError } from "../../common/AppError.js";
-import { AddressRepository } from "../../repositories/AddressRepository.js";
+
+import { IAddressRepository } from "../../types/IRepository.js";
 import {
   CreateAddressInput,
   EditAddressInput,
 } from "../../schemas/address.schema.js";
 
 export class AddressService {
-  constructor(private address: AddressRepository) {}
+  constructor(private address: IAddressRepository) {}
   async createAddress(data: CreateAddressInput, userId: number) {
     const newAddress = await this.address.createAddress(data, userId);
     return newAddress;

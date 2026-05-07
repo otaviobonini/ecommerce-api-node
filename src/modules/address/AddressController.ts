@@ -8,7 +8,7 @@ import {
 export class AddressController {
   constructor(private address: AddressService) {}
   async createAddress(req: Request, res: Response) {
-    const userId: number = req.userId as unknown as number;
+    const userId: number = req.userId as number;
     const data: CreateAddressInput = req.body;
     const address = await this.address.createAddress(data, userId);
     return res.status(201).json(address);

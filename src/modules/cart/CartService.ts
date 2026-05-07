@@ -1,12 +1,15 @@
-import { CartRepository } from "../../repositories/CartRepository.js";
 import { CreateCartItemDTO } from "../../types/cart.types.js";
 import { AppError } from "../../common/AppError.js";
-import { ProductRepository } from "../../repositories/ProductRepository.js";
+
+import {
+  ICartRepository,
+  IProductRepository,
+} from "../../types/IRepository.js";
 
 class CartService {
   constructor(
-    private cart: CartRepository,
-    private product: ProductRepository,
+    private cart: ICartRepository,
+    private product: IProductRepository,
   ) {}
   async createCart(userId: number) {
     const cart = await this.cart.createCart(userId);

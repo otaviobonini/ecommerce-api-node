@@ -1,13 +1,13 @@
 import { describe, it, expect, jest, beforeEach } from "@jest/globals";
 import AuthService from "../AuthService.js";
-import { AuthRepository } from "../../../repositories/AuthRepository.js";
+import { IAuthRepository } from "../../../types/IRepository.js";
 import {
   CreatedUser,
   CreateUserInputData,
 } from "./factories/makeUser.factory.js";
 import { AppError } from "../../../common/AppError.js";
 
-const authRepositoryMock: jest.Mocked<AuthRepository> = {
+const authRepositoryMock: jest.Mocked<IAuthRepository> = {
   createUser: jest.fn(),
   findUserByEmail: jest.fn(),
   findUserByEmailWithoutPassword: jest.fn(),

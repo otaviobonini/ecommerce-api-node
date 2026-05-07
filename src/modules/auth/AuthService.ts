@@ -1,13 +1,13 @@
 import { AppError } from "../../common/AppError.js";
-import { AuthRepository } from "../../repositories/AuthRepository.js";
 import { CreateUserInput, LoginUserInput } from "../../schemas/auth.schema.js";
 import bcrypt from "bcrypt";
 import { CreateUserDTO } from "../../types/auth.types.js";
 import jwt from "jsonwebtoken";
 import { env } from "../../schemas/env.schema.js";
+import { IAuthRepository } from "../../types/IRepository.js";
 
 class AuthService {
-  constructor(private database: AuthRepository) {}
+  constructor(private database: IAuthRepository) {}
 
   async register(data: CreateUserInput) {
     const userExists = await this.database.findUserByEmail(data.email);

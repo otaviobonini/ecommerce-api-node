@@ -1,13 +1,13 @@
 import { describe, it, expect, jest, beforeEach } from "@jest/globals";
-import { ProductRepository } from "../../../repositories/ProductRepository.js";
 import ProductService from "../ProductService.js";
 import {
   CreateProductInputData,
   ProductData,
   ProductList,
 } from "./factories/makeProduct.factory.js";
+import { IProductRepository } from "../../../types/IRepository.js";
 
-const productRepositoryMock: jest.Mocked<ProductRepository> = {
+const productRepositoryMock: jest.Mocked<IProductRepository> = {
   createProduct: jest.fn(),
   editProduct: jest.fn(),
   deleteProduct: jest.fn(),
