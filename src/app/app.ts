@@ -29,8 +29,8 @@ app.use(
   }),
 );
 app.use("/", AuthLimiter, authRoutes);
-app.use(authMiddleware);
 app.use("/", ProductLimiter, productRoutes);
+app.use(authMiddleware);
 app.use("/", CartLimiter, cartRoutes);
 app.use("/", AddressLimiter, addressRoutes);
 
