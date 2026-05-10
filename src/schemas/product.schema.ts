@@ -20,12 +20,13 @@ export const GetProductsQuerySchema = z.object({
     .string()
     .regex(/^\d+$/, "Limit must be a number")
     .transform(Number)
-    .optional(),
+    .default(10),
   offset: z
     .string()
     .regex(/^\d+$/, "Offset must be a number")
     .transform(Number)
-    .optional(),
+    .default(0),
 });
 
 export type CreateProductInput = z.infer<typeof CreateProductSchema>;
+export type GetProductsQueryInput = z.infer<typeof GetProductsQuerySchema>;

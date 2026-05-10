@@ -1,4 +1,4 @@
-import { IAddressRepository } from "../../../types/IRepository.js";
+import { IAddressRepository } from "../../../types/IAddressRepository.js";
 import { AddressService } from "../AddressService.js";
 import { CreateAddressInputFakeData } from "./factories/makeAddress.factory.js";
 

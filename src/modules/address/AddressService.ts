@@ -1,6 +1,6 @@
 import { AppError } from "../../common/AppError.js";
 
-import { IAddressRepository } from "../../types/IRepository.js";
+import { IAddressRepository } from "../../types/IAddressRepository.js";
 import {
   CreateAddressInput,
   EditAddressInput,

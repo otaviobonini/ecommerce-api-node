@@ -1,6 +1,6 @@
 import { describe, expect, jest, beforeEach } from "@jest/globals";
 import AuthService from "../AuthService.js";
-import { IAuthRepository } from "../../../types/IRepository.js";
+import { IAuthRepository } from "../../../types/IAuthRepository.js";
 import {
   CreatedUser,
   CreateUserInputData,

@@ -1,0 +1,30 @@
+name: Continuous Integration
+on: [push, pull_request]
+jobs:
+  continuous-integration:
+    runs-on: ubuntu-latest
+    env:
+      JWT_SECRET: "test-secret"
+      DATABASE_URL: "postgresql://user:pass@localhost:5432/test"
+      CLIENT_URL: "http://localhost:3000"
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "22.x"
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Runs Prisma generate
+        run: npx prisma generate
+
+      - name: Build project
+        run: npm run build
+
+      - name: Run tests
+        run: npm test

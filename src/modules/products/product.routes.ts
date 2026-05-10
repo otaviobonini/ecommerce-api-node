@@ -10,6 +10,7 @@ import { validateRequest } from "../../middlewares/validate.js";
 import ProductService from "./ProductService.js";
 import { ProductRepository } from "../../repositories/ProductRepository.js";
 import { adminMiddleware } from "../../middlewares/adminMiddleware.js";
+import { authMiddleware } from "../../middlewares/authMiddleware.js";
 
 const Controller = new ProductController(
   new ProductService(new ProductRepository()),
@@ -18,18 +19,20 @@ const Controller = new ProductController(
 const router = Router();
 
 router.get(
-  "/products",
+  "/product",
   validateRequest(GetProductsQuerySchema, "query"),
   Controller.listProducts.bind(Controller),
 );
 router.post(
   "/product",
+  authMiddleware,
   adminMiddleware,
   validateRequest(CreateProductSchema, "body"),
   Controller.createProduct.bind(Controller),
 );
 router.delete(
   "/product/:productId",
+  authMiddleware,
   adminMiddleware,
   validateRequest(ProductIdParamSchema, "params"),
   Controller.deleteProduct.bind(Controller),
@@ -37,6 +40,7 @@ router.delete(
 
 router.patch(
   "/product/:productId",
+  authMiddleware,
   adminMiddleware,
   validateRequest(ProductIdParamSchema, "params"),
   validateRequest(EditProductSchema, "body"),

@@ -3,8 +3,9 @@ import {
   CreateAddressInput,
   EditAddressInput,
 } from "../schemas/address.schema.js";
+import { IAddressRepository } from "../types/IAddressRepository.js";
 
-export class AddressRepository {
+export class AddressRepository implements IAddressRepository {
   async createAddress(data: CreateAddressInput, userId: number) {
     const address = await prisma.address.create({
       data: { ...data, userId },

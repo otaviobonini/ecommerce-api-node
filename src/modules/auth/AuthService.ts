@@ -4,7 +4,7 @@ import bcrypt from "bcrypt";
 import { CreateUserDTO } from "../../types/auth.types.js";
 import jwt from "jsonwebtoken";
 import { env } from "../../schemas/env.schema.js";
-import { IAuthRepository } from "../../types/IRepository.js";
+import { IAuthRepository } from "../../types/IAuthRepository.js";
 
 class AuthService {
   constructor(private database: IAuthRepository) {}

@@ -1,6 +1,7 @@
 import CartService from "../CartService.js";
 import CartController from "../CartController.js";
 import { Request, Response } from "express";
+import { Prisma } from "@prisma/client";
 
 const cartServiceMock: jest.Mocked<CartService> = {
   createCart: jest.fn().mockResolvedValue({ id: 1 }),
@@ -84,7 +85,12 @@ describe("Cart Controller test", () => {
       userId: 1,
     } as unknown as Request;
     const res = mockResponse();
-    cartServiceMock.createCartItem.mockResolvedValue({ id: 1, quantity: 2 });
+    cartServiceMock.createCartItem.mockResolvedValue({
+      cartItemId: 1,
+      cartId: 1,
+      productId: 1,
+      quantity: 2,
+    });
 
     await controller.createCartItem(req, res);
     expect(cartServiceMock.createCartItem).toHaveBeenCalledWith(
@@ -112,10 +118,15 @@ describe("Cart Controller test", () => {
       body: { quantity: 5 },
     } as unknown as Request;
     const res = mockResponse();
-    cartServiceMock.cartQuantityItem.mockResolvedValue({ id: 1, quantity: 5 });
+    cartServiceMock.cartQuantityItem.mockResolvedValue({
+      cartItemId: 1,
+      cartId: 1,
+      productId: 1,
+      quantity: 5,
+    });
     await controller.cartQuantityItem(req, res);
     expect(cartServiceMock.cartQuantityItem).toHaveBeenCalledWith(1, 5, 1);
-    expect(res.status).toHaveBeenCalledWith(201);
+    expect(res.status).toHaveBeenCalledWith(200);
     expect(res.json).toHaveBeenCalled();
   });
   test("Should get cart items successfully", async () => {
@@ -124,7 +135,20 @@ describe("Cart Controller test", () => {
       userId: 1,
     } as unknown as Request;
     const res = mockResponse();
-    cartServiceMock.getCartItem.mockResolvedValue([{ id: 1, quantity: 2 }]);
+    cartServiceMock.getCartItem.mockResolvedValue([
+      {
+        cartItemId: 1,
+        cartId: 1,
+        productId: 1,
+        quantity: 2,
+        product: {
+          productId: 1,
+          productName: "Produto teste",
+          productPrice: new Prisma.Decimal(10),
+          stock: 5,
+        },
+      },
+    ]);
     await controller.getCartItem(req, res);
     expect(cartServiceMock.getCartItem).toHaveBeenCalledWith(1, 1);
     expect(res.status).toHaveBeenCalledWith(200);

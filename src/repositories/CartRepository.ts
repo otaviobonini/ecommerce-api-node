@@ -1,6 +1,7 @@
 import { prisma } from "../database/prisma.js";
+import { ICartRepository } from "../types/ICartRepository.js";
 
-export class CartRepository {
+export class CartRepository implements ICartRepository {
   async createCart(userId: number) {
     const cart = await prisma.cart.upsert({
       where: { userId },

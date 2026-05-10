@@ -5,14 +5,14 @@ import { Request, Response } from "express";
 class AuthController {
   constructor(private service: AuthService) {}
 
-  async register(req: Request, res: Response) {
+  async register(req: Request, res: Response): Promise<Response> {
     const { username, email, password } = req.body as CreateUserInput;
 
     const user = await this.service.register({ username, email, password });
     return res.status(201).json(user);
   }
 
-  async login(req: Request, res: Response) {
+  async login(req: Request, res: Response): Promise<Response> {
     const { email, password } = req.body as LoginUserInput;
     const user = await this.service.login({ email, password });
     return res.status(200).json(user);

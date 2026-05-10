@@ -1,10 +1,8 @@
 import { CreateCartItemDTO } from "../../types/cart.types.js";
 import { AppError } from "../../common/AppError.js";
 
-import {
-  ICartRepository,
-  IProductRepository,
-} from "../../types/IRepository.js";
+import { ICartRepository } from "../../types/ICartRepository.js";
+import { IProductRepository } from "../../types/IProductRepository.js";
 
 class CartService {
   constructor(
@@ -64,7 +62,7 @@ class CartService {
     return cart;
   }
   async deleteCartItem(cartItemId: number, userId: number) {
-    // Busca o item e verifica se o cart pertence ao usuário
+    // Search for the item and check if the cart belongs to the user
     const item = await this.cart.findCartItemById(cartItemId);
     if (!item) throw new AppError(404, "Cart item not found");
 

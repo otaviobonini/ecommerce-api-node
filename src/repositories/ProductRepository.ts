@@ -1,7 +1,8 @@
 import { prisma } from "../database/prisma.js";
 import { CreateProductInput } from "../schemas/product.schema.js";
+import { IProductRepository } from "../types/IProductRepository.js";
 
-export class ProductRepository {
+export class ProductRepository implements IProductRepository {
   async createProduct(data: CreateProductInput) {
     const product = await prisma.product.create({
       data: data,
