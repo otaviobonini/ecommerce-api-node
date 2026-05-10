@@ -36,11 +36,8 @@ class ProductController {
     await this.service.deleteProduct(productId);
     return res.status(204).send();
   }
-  async listProducts(
-    req: Request<{}, {}, {}, GetProductsQueryInput>,
-    res: Response,
-  ): Promise<Response> {
-    const { limit, offset } = req.query;
+  async listProducts(req: Request, res: Response): Promise<Response> {
+    const { limit, offset } = req.query as unknown as GetProductsQueryInput;
     const products = await this.service.listProducts(limit, offset);
     return res.status(200).json(products);
   }

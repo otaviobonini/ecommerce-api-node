@@ -2,8 +2,6 @@ import { describe, expect, jest, beforeEach } from "@jest/globals";
 import { Request, Response } from "express";
 import ProductController from "../ProductController.js";
 import ProductService from "../ProductService.js";
-import { GetProductsQueryInput } from "../../../schemas/product.schema.js";
-import { userId } from "../../cart/__tests__/factories/cart.factory.js";
 
 const productServiceMock: jest.Mocked<ProductService> = {
   createProduct: jest.fn(),
@@ -99,7 +97,7 @@ describe("Product Controller test", () => {
         limit: 10,
         offset: 0,
       },
-    } as Request<{}, {}, {}, GetProductsQueryInput>;
+    } as unknown as Request;
 
     const res = {
       status: jest.fn().mockReturnThis(),
