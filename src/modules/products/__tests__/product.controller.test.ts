@@ -2,6 +2,8 @@ import { describe, expect, jest, beforeEach } from "@jest/globals";
 import { Request, Response } from "express";
 import ProductController from "../ProductController.js";
 import ProductService from "../ProductService.js";
+import { GetProductsQueryInput } from "../../../schemas/product.schema.js";
+import { userId } from "../../cart/__tests__/factories/cart.factory.js";
 
 const productServiceMock: jest.Mocked<ProductService> = {
   createProduct: jest.fn(),
@@ -71,6 +73,7 @@ describe("Product Controller test", () => {
 
   test("Should delete product successfully", async () => {
     const req = {
+      userId: 1,
       params: {
         productId: "1",
       },
@@ -93,10 +96,10 @@ describe("Product Controller test", () => {
   test("Should list products successfully", async () => {
     const req = {
       query: {
-        limit: "10",
-        offset: "0",
+        limit: 10,
+        offset: 0,
       },
-    } as unknown as Request;
+    } as Request<{}, {}, {}, GetProductsQueryInput>;
 
     const res = {
       status: jest.fn().mockReturnThis(),
