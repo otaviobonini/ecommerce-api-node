@@ -1,5 +1,4 @@
 import { prisma } from "../database/prisma.js";
-import { CreateCartDTO, CreateCartItemDTO } from "../types/cart.types.js";
 
 export class CartRepository {
   async createCart(userId: number) {

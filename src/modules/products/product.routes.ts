@@ -3,12 +3,12 @@ import ProductController from "./ProductController.js";
 import {
   CreateProductSchema,
   EditProductSchema,
+  GetProductsQuerySchema,
   ProductIdParamSchema,
 } from "../../schemas/product.schema.js";
 import { validateRequest } from "../../middlewares/validate.js";
 import ProductService from "./ProductService.js";
 import { ProductRepository } from "../../repositories/ProductRepository.js";
-import { AuthRepository } from "../../repositories/AuthRepository.js";
 import { adminMiddleware } from "../../middlewares/adminMiddleware.js";
 
 const Controller = new ProductController(
@@ -17,7 +17,11 @@ const Controller = new ProductController(
 
 const router = Router();
 
-router.get("/products", Controller.listProducts.bind(Controller));
+router.get(
+  "/products",
+  validateRequest(GetProductsQuerySchema, "query"),
+  Controller.listProducts.bind(Controller),
+);
 router.post(
   "/product",
   adminMiddleware,

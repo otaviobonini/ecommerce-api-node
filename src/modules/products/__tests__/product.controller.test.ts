@@ -1,4 +1,4 @@
-import { describe, it, expect, jest, beforeEach } from "@jest/globals";
+import { describe, expect, jest, beforeEach } from "@jest/globals";
 import { Request, Response } from "express";
 import ProductController from "../ProductController.js";
 import ProductService from "../ProductService.js";
@@ -90,7 +90,12 @@ describe("Product Controller test", () => {
   });
 
   test("Should list products successfully", async () => {
-    const req = {} as Request;
+    const req = {
+      query: {
+        limit: "10",
+        offset: "0",
+      },
+    } as unknown as Request;
 
     const res = {
       status: jest.fn().mockReturnThis(),

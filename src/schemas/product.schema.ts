@@ -15,4 +15,17 @@ export const ProductIdParamSchema = z.object({
     .transform(Number),
 });
 
+export const GetProductsQuerySchema = z.object({
+  limit: z
+    .string()
+    .regex(/^\d+$/, "Limit must be a number")
+    .transform(Number)
+    .optional(),
+  offset: z
+    .string()
+    .regex(/^\d+$/, "Offset must be a number")
+    .transform(Number)
+    .optional(),
+});
+
 export type CreateProductInput = z.infer<typeof CreateProductSchema>;

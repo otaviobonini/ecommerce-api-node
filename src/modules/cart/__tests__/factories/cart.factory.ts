@@ -6,3 +6,4 @@ export const cartObject = {
   createdAt: new Date(),
   updatedAt: new Date(),
 };
+
