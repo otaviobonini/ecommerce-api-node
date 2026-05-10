@@ -126,7 +126,7 @@ describe("Cart Controller test", () => {
     });
     await controller.cartQuantityItem(req, res);
     expect(cartServiceMock.cartQuantityItem).toHaveBeenCalledWith(1, 5, 1);
-    expect(res.status).toHaveBeenCalledWith(201);
+    expect(res.status).toHaveBeenCalledWith(200);
     expect(res.json).toHaveBeenCalled();
   });
   test("Should get cart items successfully", async () => {

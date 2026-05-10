@@ -21,7 +21,7 @@ export const LoginUserSchema = z.object({
 });
 
 export const JwtPayloadSchema = z.object({
-  userId: z.number().int().positive(),
+  id: z.number().int().positive(),
   role: z.enum(["USER", "ADMIN"]),
 });
 

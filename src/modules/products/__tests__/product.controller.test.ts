@@ -79,6 +79,7 @@ describe("Product Controller test", () => {
     const res = {
       status: jest.fn().mockReturnThis(),
       json: jest.fn(),
+      send: jest.fn(),
     } as unknown as Response;
 
     productServiceMock.deleteProduct.mockResolvedValue(undefined as any);

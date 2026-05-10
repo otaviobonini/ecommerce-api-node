@@ -19,8 +19,8 @@ export const authMiddleware = (
   }
   try {
     const decoded = jwt.verify(auth[1], env.JWT_SECRET) as JwtPayload;
-    const { userId, role } = JwtPayloadSchema.parse(decoded);
-    req.userId = userId;
+    const { id, role } = JwtPayloadSchema.parse(decoded);
+    req.userId = id;
     req.userRole = role;
     next();
   } catch (error) {
