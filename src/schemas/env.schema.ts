@@ -7,6 +7,7 @@ const envSchema = z.object({
   NODE_ENV: z
     .enum(["development", "test", "production"])
     .default("development"),
+  CLIENT_URL: z.string().nonempty(),
 });
 
 export const env = envSchema.parse(process.env);
