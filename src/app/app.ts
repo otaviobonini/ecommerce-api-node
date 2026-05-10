@@ -16,12 +16,18 @@ import {
 import { authMiddleware } from "../middlewares/authMiddleware.js";
 import cartRoutes from "../modules/cart/cart.routes.js";
 import addressRoutes from "../modules/address/address.routes.js";
+import { env } from "../schemas/env.schema.js";
 
 const app = express();
 
 app.use(express.json());
 app.use(helmet());
-app.use(cors());
+app.use(
+  cors({
+    origin: env.CLIENT_URL,
+    credentials: true,
+  }),
+);
 app.use("/", AuthLimiter, authRoutes);
 app.use(authMiddleware);
 app.use("/", ProductLimiter, productRoutes);

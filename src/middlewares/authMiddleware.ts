@@ -1,9 +1,13 @@
-import { Request, NextFunction } from "express";
+import { Request, Response, NextFunction } from "express";
 import jwt, { JwtPayload } from "jsonwebtoken";
 import { env } from "../schemas/env.schema.js";
 import { AppError } from "../common/AppError.js";
 
-export const authMiddleware = (req: Request, next: NextFunction) => {
+export const authMiddleware = (
+  req: Request,
+  res: Response,
+  next: NextFunction,
+) => {
   const authHeader = req.headers.authorization;
   if (!authHeader) {
     return next(new AppError(401, "Authorization header is missing"));
