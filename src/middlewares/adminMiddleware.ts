@@ -7,7 +7,9 @@ export const adminMiddleware = (
   next: NextFunction,
 ) => {
   if (req.userRole !== "ADMIN") {
-    throw new AppError(403, "User do not have permission to access route");
+    return next(
+      new AppError(403, "User do not have permission to access route"),
+    );
   }
   next();
 };

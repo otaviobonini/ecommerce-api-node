@@ -25,23 +25,23 @@ router.delete(
   controller.clearCart.bind(controller),
 );
 router.get(
-  "/cartItem/:cartId",
+  "/cart/item/:cartId",
   validateRequest(CartIdParamSchema, "params"),
   controller.getCartItem.bind(controller),
 );
 router.post(
-  "/cartItem",
+  "/cart/item",
   validateRequest(CreateCartItemSchema, "body"),
   controller.createCartItem.bind(controller),
 );
 router.delete(
-  "/cartItem/:cartItemId",
+  "/cart/item/:cartItemId",
   validateRequest(CartItemIdParamSchema, "params"),
   controller.deleteCartItem.bind(controller),
 );
 
 router.patch(
-  "/cartItem/:cartItemId",
+  "/cart/item/:cartItemId",
   validateRequest(CartItemIdParamSchema, "params"),
   validateRequest(UpdateCartItemQuantitySchema, "body"),
   controller.cartQuantityItem.bind(controller),

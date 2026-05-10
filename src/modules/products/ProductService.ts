@@ -1,5 +1,5 @@
 import { CreateProductInput } from "../../schemas/product.schema.js";
-import { IProductRepository } from "../../types/IRepository.js";
+import { IProductRepository } from "../../types/IProductRepository.js";
 
 class ProductService {
   constructor(private product: IProductRepository) {}
@@ -17,11 +17,8 @@ class ProductService {
     const product = await this.product.deleteProduct(productId);
     return product;
   }
-  async listProducts(limit?: number, offset?: number) {
-    if (limit === undefined) limit = 10;
-    if (offset === undefined) offset = 0;
-    const products = await this.product.getProducts(limit, offset);
-    return products;
+  async listProducts(limit = 10, offset = 0) {
+    return this.product.getProducts(limit, offset);
   }
 }
 

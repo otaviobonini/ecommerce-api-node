@@ -20,5 +20,10 @@ export const LoginUserSchema = z.object({
     .max(20, "Password must be at most 20 characters long"),
 });
 
+export const JwtPayloadSchema = z.object({
+  userId: z.number().int().positive(),
+  role: z.enum(["USER", "ADMIN"]),
+});
+
 export type CreateUserInput = z.infer<typeof CreateUserSchema>;
 export type LoginUserInput = z.infer<typeof LoginUserSchema>;

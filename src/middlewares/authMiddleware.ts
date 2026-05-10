@@ -2,6 +2,7 @@ import { Request, Response, NextFunction } from "express";
 import jwt, { JwtPayload } from "jsonwebtoken";
 import { env } from "../schemas/env.schema.js";
 import { AppError } from "../common/AppError.js";
+import { JwtPayloadSchema } from "../schemas/auth.schema.js";
 
 export const authMiddleware = (
   req: Request,
@@ -18,8 +19,9 @@ export const authMiddleware = (
   }
   try {
     const decoded = jwt.verify(auth[1], env.JWT_SECRET) as JwtPayload;
-    req.userId = decoded.id;
-    req.userRole = decoded.role;
+    const { userId, role } = JwtPayloadSchema.parse(decoded);
+    req.userId = userId;
+    req.userRole = role;
     next();
   } catch (error) {
     return next(new AppError(401, "Invalid token"));

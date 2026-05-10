@@ -5,7 +5,7 @@ import {
   ProductData,
   ProductList,
 } from "./factories/makeProduct.factory.js";
-import { IProductRepository } from "../../../types/IRepository.js";
+import { IProductRepository } from "../../../types/IProductRepository.js";
 
 const productRepositoryMock: jest.Mocked<IProductRepository> = {
   createProduct: jest.fn(),

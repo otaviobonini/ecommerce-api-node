@@ -18,7 +18,7 @@ const Controller = new ProductController(
 const router = Router();
 
 router.get(
-  "/products",
+  "/product",
   validateRequest(GetProductsQuerySchema, "query"),
   Controller.listProducts.bind(Controller),
 );

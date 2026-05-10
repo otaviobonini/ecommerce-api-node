@@ -1,10 +1,8 @@
 import CartService from "../CartService.js";
 import { cartObject, userId } from "./factories/cart.factory.js";
 import { ProductData } from "../../products/__tests__/factories/makeProduct.factory.js";
-import {
-  ICartRepository,
-  IProductRepository,
-} from "../../../types/IRepository.js";
+import { ICartRepository } from "../../../types/ICartRepository.js";
+import { IProductRepository } from "../../../types/IProductRepository.js";
 
 export const cartRepositoryMock: jest.Mocked<ICartRepository> = {
   createCart: jest.fn(),
