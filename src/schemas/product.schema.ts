@@ -2,7 +2,7 @@ import z from "zod";
 
 export const CreateProductSchema = z.object({
   productName: z.string(),
-  productPrice: z.coerce.number().int().positive(),
+  productPrice: z.coerce.number().positive(),
   stock: z.coerce.number().int().positive(),
 });
 

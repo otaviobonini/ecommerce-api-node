@@ -17,31 +17,38 @@ const controller = new CartController(
   new CartService(new CartRepository(), new ProductRepository()),
 );
 
-router.get("/cart", controller.getCart.bind(controller));
-router.post("/cart", controller.createCart.bind(controller));
+// Cart
+router.get("/carts", controller.getCart.bind(controller));
+
+router.post("/carts", controller.createCart.bind(controller));
+
 router.delete(
-  "/cart/:cartId",
+  "/carts/:cartId",
   validateRequest(CartIdParamSchema, "params"),
   controller.clearCart.bind(controller),
 );
+
+// Cart Items
 router.get(
-  "/cart/item/:cartId",
+  "/carts/:cartId/items",
   validateRequest(CartIdParamSchema, "params"),
   controller.getCartItem.bind(controller),
 );
+
 router.post(
-  "/cart/item",
+  "/carts/items",
   validateRequest(CreateCartItemSchema, "body"),
   controller.createCartItem.bind(controller),
 );
+
 router.delete(
-  "/cart/item/:cartItemId",
+  "/carts/items/:cartItemId",
   validateRequest(CartItemIdParamSchema, "params"),
   controller.deleteCartItem.bind(controller),
 );
 
 router.patch(
-  "/cart/item/:cartItemId",
+  "/carts/items/:cartItemId",
   validateRequest(CartItemIdParamSchema, "params"),
   validateRequest(UpdateCartItemQuantitySchema, "body"),
   controller.cartQuantityItem.bind(controller),
