@@ -23,31 +23,36 @@ class CartController {
   }
   async clearCart(req: Request, res: Response): Promise<Response> {
     const cartId = Number(req.params.cartId);
-    const userId = Number(req.userId);
+    const userId = req.userId;
+    if (!userId) throw new AppError(401, "Unauthorized");
     await this.service.cleanCart(cartId, userId);
     return res.status(204).send();
   }
   async createCartItem(req: Request, res: Response): Promise<Response> {
     const data = req.body as CreateCartItemInput;
-    const userId = Number(req.userId);
+    const userId = req.userId;
+    if (!userId) throw new AppError(401, "Unauthorized");
     const cartItem = await this.service.createCartItem(data, userId);
     return res.status(201).json(cartItem);
   }
   async getCartItem(req: Request, res: Response): Promise<Response> {
     const cartId = Number(req.params.cartId);
-    const userId = Number(req.userId);
+    const userId = req.userId;
+    if (!userId) throw new AppError(401, "Unauthorized");
     const cartItem = await this.service.getCartItem(cartId, userId);
     return res.status(200).json(cartItem);
   }
   async deleteCartItem(req: Request, res: Response): Promise<Response> {
     const cartItemId = Number(req.params.cartItemId);
-    const userId = Number(req.userId);
+    const userId = req.userId;
+    if (!userId) throw new AppError(401, "Unauthorized");
     await this.service.deleteCartItem(cartItemId, userId);
     return res.status(204).send();
   }
   async cartQuantityItem(req: Request, res: Response): Promise<Response> {
     const cartItemId = Number(req.params.cartItemId);
-    const userId = Number(req.userId);
+    const userId = req.userId;
+    if (!userId) throw new AppError(401, "Unauthorized");
     const quantity = req.body.quantity;
     const product = await this.service.cartQuantityItem(
       cartItemId,

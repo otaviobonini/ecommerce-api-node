@@ -29,6 +29,10 @@ class ProductController {
   }
   async deleteProduct(req: Request, res: Response): Promise<Response> {
     let productId = Number(req.params.productId);
+    const userId = req.userId;
+    if (!userId) {
+      throw new AppError(401, "Not Authenticated");
+    }
     await this.service.deleteProduct(productId);
     return res.status(204).send();
   }

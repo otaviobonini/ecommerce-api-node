@@ -71,6 +71,7 @@ describe("Product Controller test", () => {
 
   test("Should delete product successfully", async () => {
     const req = {
+      userId: 1,
       params: {
         productId: "1",
       },
@@ -93,8 +94,8 @@ describe("Product Controller test", () => {
   test("Should list products successfully", async () => {
     const req = {
       query: {
-        limit: "10",
-        offset: "0",
+        limit: 10,
+        offset: 0,
       },
     } as unknown as Request;
 

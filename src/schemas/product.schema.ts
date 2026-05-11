@@ -2,7 +2,7 @@ import z from "zod";
 
 export const CreateProductSchema = z.object({
   productName: z.string(),
-  productPrice: z.coerce.number().int().positive(),
+  productPrice: z.coerce.number().positive(),
   stock: z.coerce.number().int().positive(),
 });
 
@@ -20,11 +20,13 @@ export const GetProductsQuerySchema = z.object({
     .string()
     .regex(/^\d+$/, "Limit must be a number")
     .transform(Number)
+    .optional()
     .default(10),
   offset: z
     .string()
     .regex(/^\d+$/, "Offset must be a number")
     .transform(Number)
+    .optional()
     .default(0),
 });
 
