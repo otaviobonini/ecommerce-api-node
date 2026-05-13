@@ -13,6 +13,8 @@ export interface IOrderRepository {
     total: number;
     items: { productId: number; quantity: number; priceAtTime: number }[];
   }): Promise<OrderWithItems>;
+  restoreStock(orderId: number): Promise<void>;
+  cancelOrder(orderId: number): Promise<void>;
   updateOrderPaymentLink(
     orderId: number,
     paymentLink: string,

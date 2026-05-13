@@ -25,6 +25,7 @@ class OrderService {
       0,
     );
     // We need to create the order before generating the payment link
+
     const order = await this.order.createOrder({
       userId,
       addressId,
@@ -36,30 +37,36 @@ class OrderService {
         priceAtTime: Number(item.product.productPrice),
       })),
     });
-    // Now we can generate the payment link
-    const { paymentLink } = await this.payment.createCheckoutSession({
-      orderId: order.orderId,
-      total: total * 100, // Convert to cents
-      items: cartItems.map((item) => ({
-        name: item.product.productName,
-        quantity: item.quantity,
-        unitPrice: Number(item.product.productPrice) * 100, // Convert to cents
-      })),
-    });
-    // Update the order with the payment link
-    await this.order.updateOrderPaymentLink(order.orderId, paymentLink);
-    // Clear the cart
-    await this.cart.clearCart(cart.cartId);
-    return { orderId: order.orderId, paymentLink };
+    // Now we can generate the payment link but if it doesn´t work for any reason we rollback.
+    try {
+      const { paymentLink } = await this.payment.createCheckoutSession({
+        orderId: order.orderId,
+        total: total * 100,
+        items: cartItems.map((item) => ({
+          name: item.product.productName,
+          quantity: item.quantity,
+          unitPrice: Number(item.product.productPrice) * 100,
+        })),
+      });
+
+      await this.order.updateOrderPaymentLink(order.orderId, paymentLink);
+      await this.cart.clearCart(cart.cartId);
+
+      return { orderId: order.orderId, paymentLink };
+    } catch (error) {
+      // If payment provider fails, we cancel the order and restore stock
+      await this.order.cancelOrder(order.orderId);
+      throw new AppError(502, "Payment provider unavailable, please try again");
+    }
   }
 
   async handleWebhook(payload: Buffer, signature: string) {
     const event = this.payment.constructWebhookEvent(payload, signature);
     if (event.type === "checkout.session.completed") {
       await this.order.editOrderStatus(event.orderId, "PAID");
-      await this.order.decrementStock(event.orderId);
     } else if (event.type === "payment_intent.payment_failed") {
       await this.order.editOrderStatus(event.orderId, "CANCELLED");
+      await this.order.restoreStock(event.orderId);
     }
   }
   async getOrdersByUserId(
