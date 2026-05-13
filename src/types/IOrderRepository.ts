@@ -19,7 +19,6 @@ export interface IOrderRepository {
     orderId: number,
     paymentLink: string,
   ): Promise<OrderWithItems>;
-  decrementStock(orderId: number): Promise<void>;
   getOrdersByUserId(
     userId: number,
     status?: Status,

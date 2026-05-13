@@ -1,15 +1,13 @@
-import AuthController from "./AuthController.js";
 import { Router } from "express";
 import { validateRequest } from "../../middlewares/validate.js";
 import {
   CreateUserSchema,
   LoginUserSchema,
 } from "../../schemas/auth.schema.js";
-import AuthService from "./AuthService.js";
-import { AuthRepository } from "../../repositories/AuthRepository.js";
 
-const Controller = new AuthController(new AuthService(new AuthRepository()));
+import { makeAuthController } from "./auth.factory.js";
 
+const Controller = makeAuthController();
 const router = Router();
 
 router.post(

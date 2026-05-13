@@ -56,8 +56,8 @@ export class OrderRepository implements IOrderRepository {
   }
 
   async restoreStock(orderId: number): Promise<void> {
-    const items = await prisma.orderItem.findMany({ where: { orderId } });
     await prisma.$transaction(async (trx) => {
+      const items = await trx.orderItem.findMany({ where: { orderId } });
       for (const item of items) {
         await trx.product.update({
           where: { productId: item.productId },
@@ -69,19 +69,6 @@ export class OrderRepository implements IOrderRepository {
         });
       }
     });
-  }
-
-  async decrementStock(orderId: number): Promise<void> {
-    const items = await prisma.orderItem.findMany({ where: { orderId } });
-
-    await prisma.$transaction(
-      items.map((item) =>
-        prisma.product.update({
-          where: { productId: item.productId },
-          data: { stock: { decrement: item.quantity } },
-        }),
-      ),
-    );
   }
 
   async getOrdersByUserId(

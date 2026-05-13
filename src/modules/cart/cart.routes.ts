@@ -1,8 +1,5 @@
-import CartController from "./CartController.js";
 import { Router } from "express";
-import CartService from "./CartService.js";
-import { CartRepository } from "../../repositories/CartRepository.js";
-import { ProductRepository } from "../../repositories/ProductRepository.js";
+
 import { validateRequest } from "../../middlewares/validate.js";
 import {
   CartIdParamSchema,
@@ -11,12 +8,11 @@ import {
   UpdateCartItemQuantitySchema,
 } from "../../schemas/cart.schema.js";
 import { authMiddleware } from "../../middlewares/authMiddleware.js";
+import { makeCartController } from "./cart.factory.js";
 
 const router = Router();
 
-const controller = new CartController(
-  new CartService(new CartRepository(), new ProductRepository()),
-);
+const controller = makeCartController();
 
 // Cart
 router.get("/carts", authMiddleware, controller.getCart.bind(controller));

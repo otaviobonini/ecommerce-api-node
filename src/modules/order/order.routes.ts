@@ -1,10 +1,5 @@
 import { Router } from "express";
 import express from "express";
-import OrderController from "./OrderController.js";
-import OrderService from "./OrderService.js";
-import { OrderRepository } from "../../repositories/OrderRepository.js";
-import { CartRepository } from "../../repositories/CartRepository.js";
-import { StripeGateway } from "../../providers/StripeGateway.js";
 import { authMiddleware } from "../../middlewares/authMiddleware.js";
 import { adminMiddleware } from "../../middlewares/adminMiddleware.js";
 import { validateRequest } from "../../middlewares/validate.js";
@@ -14,18 +9,11 @@ import {
   GetUserOrdersSchema,
   OrderIdParamSchema,
 } from "../../schemas/order.schema.js";
-import { AddressRepository } from "../../repositories/AddressRepository.js";
+import { makeOrderController } from "./order.factory.js";
 
 const router = Router();
 
-const controller = new OrderController(
-  new OrderService(
-    new StripeGateway(),
-    new OrderRepository(),
-    new CartRepository(),
-    new AddressRepository(),
-  ),
-);
+const controller = makeOrderController();
 
 // Web hook route (no auth and raw)
 export const webhookRouter = Router();

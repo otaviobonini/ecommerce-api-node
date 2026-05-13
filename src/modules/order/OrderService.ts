@@ -77,7 +77,7 @@ class OrderService {
   ) {
     return this.order.getOrdersByUserId(
       userId,
-      status as Status | undefined,
+      status as Status,
       offset,
       limit,
     );
