@@ -3,14 +3,19 @@ import { ICartRepository } from "../../types/ICartRepository.js";
 import { IPaymentGateway } from "../../types/IPaymentGateway.js";
 import { AppError } from "../../common/AppError.js";
 import { Status } from "@prisma/client";
+import { IAddressRepository } from "../../types/IAddressRepository.js";
 
 class OrderService {
   constructor(
     private payment: IPaymentGateway,
     private order: IOrderRepository,
     private cart: ICartRepository,
+    private address: IAddressRepository,
   ) {}
   async createOrder(userId: number, addressId: number) {
+    const address = await this.address.getAddressById(addressId);
+    if (!address) throw new AppError(404, "Address not found");
+    if (address.userId !== userId) throw new AppError(403, "Forbidden");
     const cart = await this.cart.findCartByUserId(userId);
     if (!cart) throw new AppError(404, "Cart not found");
     const cartItems = await this.cart.getCartItems(cart.cartId);
@@ -52,6 +57,7 @@ class OrderService {
     const event = this.payment.constructWebhookEvent(payload, signature);
     if (event.type === "checkout.session.completed") {
       await this.order.editOrderStatus(event.orderId, "PAID");
+      await this.order.decrementStock(event.orderId);
     } else if (event.type === "payment_intent.payment_failed") {
       await this.order.editOrderStatus(event.orderId, "CANCELLED");
     }

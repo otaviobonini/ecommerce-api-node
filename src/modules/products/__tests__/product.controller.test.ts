@@ -125,17 +125,4 @@ describe("Product Controller test", () => {
       "Product id not valid",
     );
   });
-  test("Should throw error if user is not authenticated on edit", async () => {
-    const req = {
-      params: { productId: "1" },
-      userId: undefined,
-      body: {},
-    } as unknown as Request;
-
-    const res = {} as Response;
-
-    await expect(controller.editProduct(req, res)).rejects.toThrow(
-      "Not Authenticated",
-    );
-  });
 });

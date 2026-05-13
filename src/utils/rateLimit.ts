@@ -18,4 +18,9 @@ export const CartLimiter = rateLimit({
   message: "Too many requests, please try again later.",
 });
 
+export const OrderLimiter = rateLimit({
+  windowMs: 5 * 60 * 1000, // 5 minutes
+  max: 25,
+  message: "Too many requests, please try again later.",
+});
 export const AddressLimiter = ProductLimiter;

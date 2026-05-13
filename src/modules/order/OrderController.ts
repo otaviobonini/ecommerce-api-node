@@ -6,8 +6,7 @@ class OrderController {
   constructor(private service: OrderService) {}
 
   async createOrder(req: Request, res: Response) {
-    const userId = req.userId;
-    if (!userId) throw new AppError(401, "Unauthorized");
+    const userId = req.userId!;
 
     const { addressId } = req.body;
     const result = await this.service.createOrder(userId, addressId);
@@ -21,16 +20,13 @@ class OrderController {
     return res.status(200).json({ received: true });
   }
   async getOrderById(req: Request, res: Response) {
-    const userId = req.userId;
-    if (!userId) throw new AppError(401, "Unauthorized");
-
+    const userId = req.userId!;
     const orderId = Number(req.params.orderId);
     const order = await this.service.getOrderById(orderId, userId);
     return res.status(200).json(order);
   }
   async getUserOrders(req: Request, res: Response) {
-    const userId = req.userId;
-    if (!userId) throw new AppError(401, "Unauthorized");
+    const userId = req.userId!;
 
     const { status, offset, limit } = req.query;
     const orders = await this.service.getOrdersByUserId(

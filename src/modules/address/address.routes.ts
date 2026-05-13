@@ -8,6 +8,7 @@ import {
   CreateAddressSchema,
   EditAddressSchema,
 } from "../../schemas/address.schema.js";
+import { authMiddleware } from "../../middlewares/authMiddleware.js";
 
 const router = Router();
 const controller = new AddressController(
@@ -16,22 +17,30 @@ const controller = new AddressController(
 
 router.post(
   "/address",
+  authMiddleware,
   validateRequest(CreateAddressSchema, "body"),
   controller.createAddress.bind(controller),
 );
-router.get("/address", controller.getUserAddresses.bind(controller));
+router.get(
+  "/address",
+  authMiddleware,
+  controller.getUserAddresses.bind(controller),
+);
 router.delete(
   "/address/:addressId",
+  authMiddleware,
   validateRequest(AddressIdParamSchema, "params"),
   controller.deleteAddress.bind(controller),
 );
 router.put(
   "/address/:addressId/default",
+  authMiddleware,
   validateRequest(AddressIdParamSchema, "params"),
   controller.setDefaultAddress.bind(controller),
 );
 router.put(
   "/address/:addressId",
+  authMiddleware,
   validateRequest(AddressIdParamSchema, "params"),
   validateRequest(EditAddressSchema, "body"),
   controller.editAddress.bind(controller),
