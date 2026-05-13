@@ -2,6 +2,7 @@ import { IOrderRepository } from "../../types/IOrderRepository.js";
 import { ICartRepository } from "../../types/ICartRepository.js";
 import { IPaymentGateway } from "../../types/IPaymentGateway.js";
 import { AppError } from "../../common/AppError.js";
+import { Status } from "@prisma/client";
 
 class OrderService {
   constructor(
@@ -22,6 +23,7 @@ class OrderService {
     const order = await this.order.createOrder({
       userId,
       addressId,
+
       total,
       items: cartItems.map((item) => ({
         productId: item.productId,
@@ -54,4 +56,29 @@ class OrderService {
       await this.order.editOrderStatus(event.orderId, "CANCELLED");
     }
   }
+  async getOrdersByUserId(
+    userId: number,
+    status?: string,
+    offset = 0,
+    limit = 20,
+  ) {
+    return this.order.getOrdersByUserId(
+      userId,
+      status as Status | undefined,
+      offset,
+      limit,
+    );
+  }
+  async getOrderById(orderId: number, userId: number) {
+    const order = await this.order.getOrderById(orderId);
+    if (!order) throw new AppError(404, "Order not found");
+    if (order.userId !== userId) throw new AppError(403, "Forbidden");
+    return order;
+  }
+
+  async getAllOrders(offset = 0, limit = 20) {
+    return this.order.getAllOrders(offset, limit);
+  }
 }
+
+export default OrderService;

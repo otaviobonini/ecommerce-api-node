@@ -16,6 +16,7 @@ import {
 import { authMiddleware } from "../middlewares/authMiddleware.js";
 import cartRoutes from "../modules/cart/cart.routes.js";
 import addressRoutes from "../modules/address/address.routes.js";
+import orderRoutes from "../modules/order/order.routes.js";
 import { env } from "../schemas/env.schema.js";
 
 const app = express();
@@ -30,6 +31,7 @@ app.use(
 );
 app.use("/", AuthLimiter, authRoutes);
 app.use("/", ProductLimiter, productRoutes);
+app.use("/", orderRoutes);
 app.use(authMiddleware);
 app.use("/", CartLimiter, cartRoutes);
 app.use("/", AddressLimiter, addressRoutes);

@@ -9,15 +9,15 @@ export class StripeGateway implements IPaymentGateway {
     this.stripe = new Stripe(env.STRIPE_SECRET_KEY);
   }
 
-  async createCheckoutSession({ orderId, total, items }) {
+  async createCheckoutSession({ orderId, total, items }: any) {
     const session = await this.stripe.checkout.sessions.create({
       payment_method_types: ["card", "pix", "boleto"],
       mode: "payment",
-      line_items: items.map((item) => ({
+      line_items: items.map((item: any) => ({
         quantity: item.quantity,
         price_data: {
           currency: "brl",
-          unit_amount: item.unitPrice, // Stripe usa centavos
+          unit_amount: item.unitPrice, // Stripe uses cents
           product_data: { name: item.name },
         },
       })),
