@@ -1,0 +1,57 @@
+import { IOrderRepository } from "../../types/IOrderRepository.js";
+import { ICartRepository } from "../../types/ICartRepository.js";
+import { IPaymentGateway } from "../../types/IPaymentGateway.js";
+import { AppError } from "../../common/AppError.js";
+
+class OrderService {
+  constructor(
+    private payment: IPaymentGateway,
+    private order: IOrderRepository,
+    private cart: ICartRepository,
+  ) {}
+  async createOrder(userId: number, addressId: number) {
+    const cart = await this.cart.findCartByUserId(userId);
+    if (!cart) throw new AppError(404, "Cart not found");
+    const cartItems = await this.cart.getCartItems(cart.cartId);
+    if (cartItems.length === 0) throw new AppError(400, "Cart is empty");
+    const total = cartItems.reduce(
+      (sum, item) => sum + item.quantity * Number(item.product.productPrice),
+      0,
+    );
+    // We need to create the order before generating the payment link
+    const order = await this.order.createOrder({
+      userId,
+      addressId,
+      total,
+      items: cartItems.map((item) => ({
+        productId: item.productId,
+        quantity: item.quantity,
+        priceAtTime: Number(item.product.productPrice),
+      })),
+    });
+    // Now we can generate the payment link
+    const { paymentLink } = await this.payment.createCheckoutSession({
+      orderId: order.orderId,
+      total: total * 100, // Convert to cents
+      items: cartItems.map((item) => ({
+        name: item.product.productName,
+        quantity: item.quantity,
+        unitPrice: Number(item.product.productPrice) * 100, // Convert to cents
+      })),
+    });
+    // Update the order with the payment link
+    await this.order.updateOrderPaymentLink(order.orderId, paymentLink);
+    // Clear the cart
+    await this.cart.clearCart(cart.cartId);
+    return { orderId: order.orderId, paymentLink };
+  }
+
+  async handleWebhook(payload: Buffer, signature: string) {
+    const event = this.payment.constructWebhookEvent(payload, signature);
+    if (event.type === "checkout.session.completed") {
+      await this.order.editOrderStatus(event.orderId, "PAID");
+    } else if (event.type === "payment_intent.payment_failed") {
+      await this.order.editOrderStatus(event.orderId, "CANCELLED");
+    }
+  }
+}
