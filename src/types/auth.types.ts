@@ -12,10 +12,11 @@ export type CreateUserResponse = {
   email: string;
 };
 
-export type SafeUser = {
-  userId: number;
+export type SafeUserWithToken = {
+  id: number;
   email: string;
   username: string;
+  token: string;
 };
 
 export type UserWithRelations = Prisma.UserGetPayload<{

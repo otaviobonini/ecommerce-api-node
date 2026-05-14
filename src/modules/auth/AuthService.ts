@@ -1,16 +1,20 @@
 import { AppError } from "../../common/AppError.js";
 import { CreateUserInput, LoginUserInput } from "../../schemas/auth.schema.js";
 import bcrypt from "bcrypt";
-import { CreateUserDTO } from "../../types/auth.types.js";
+import {
+  CreateUserDTO,
+  CreateUserResponse,
+  SafeUserWithToken,
+} from "../../types/auth.types.js";
 import jwt from "jsonwebtoken";
 import { env } from "../../schemas/env.schema.js";
 import { IAuthRepository } from "../../types/IAuthRepository.js";
 
 class AuthService {
-  constructor(private database: IAuthRepository) {}
+  constructor(private auth: IAuthRepository) {}
 
-  async register(data: CreateUserInput) {
-    const userExists = await this.database.findUserByEmail(data.email);
+  async register(data: CreateUserInput): Promise<CreateUserResponse> {
+    const userExists = await this.auth.findUserByEmail(data.email);
     if (userExists) {
       throw new AppError(409, "User already exists");
     }
@@ -20,11 +24,10 @@ class AuthService {
       hashedPassword,
       email: data.email,
     };
-    const newUser = await this.database.createUser(userData);
-    return newUser;
+    return this.auth.createUser(userData);
   }
-  async login(data: LoginUserInput) {
-    const userExists = await this.database.findUserByEmail(data.email);
+  async login(data: LoginUserInput): Promise<SafeUserWithToken> {
+    const userExists = await this.auth.findUserByEmail(data.email);
     if (!userExists) {
       throw new AppError(401, "Invalid email or password");
     }

@@ -1,23 +1,28 @@
 import { prisma } from "../database/prisma.js";
-import { CreateUserDTO, CreateUserResponse } from "../types/auth.types.js";
+import { User } from "@prisma/client";
+import {
+  CreateUserDTO,
+  CreateUserResponse,
+  UserWithRelations,
+} from "../types/auth.types.js";
 import { IAuthRepository } from "../types/IAuthRepository.js";
 
 export class AuthRepository implements IAuthRepository {
   async createUser(data: CreateUserDTO): Promise<CreateUserResponse> {
-    const user = await prisma.user.create({
+    return prisma.user.create({
       data: data,
       select: { userId: true, username: true, email: true },
     });
-    return user;
   }
-  async findUserByEmail(email: string) {
-    const user = await prisma.user.findUnique({
+  async findUserByEmail(email: string): Promise<User | null> {
+    return prisma.user.findUnique({
       where: { email },
     });
-    return user;
   }
-  async findUserByEmailWithoutPassword(email: string) {
-    const user = await prisma.user.findUnique({
+  async findUserByEmailWithoutPassword(
+    email: string,
+  ): Promise<CreateUserResponse | null> {
+    return prisma.user.findUnique({
       where: { email },
       select: {
         userId: true,
@@ -25,10 +30,9 @@ export class AuthRepository implements IAuthRepository {
         username: true,
       },
     });
-    return user;
   }
-  async findUserById(id: number) {
-    const user = await prisma.user.findUnique({
+  async findUserById(id: number): Promise<UserWithRelations | null> {
+    return prisma.user.findUnique({
       where: { userId: id },
       select: {
         address: true,
@@ -40,6 +44,5 @@ export class AuthRepository implements IAuthRepository {
         username: true,
       },
     });
-    return user;
   }
 }
