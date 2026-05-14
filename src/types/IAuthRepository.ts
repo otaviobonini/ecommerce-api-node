@@ -3,7 +3,6 @@ import { User } from "@prisma/client";
 import {
   CreateUserDTO,
   CreateUserResponse,
-  SafeUser,
   UserWithRelations,
 } from "./auth.types.js";
 
@@ -12,7 +11,9 @@ export interface IAuthRepository {
 
   findUserByEmail(email: string): Promise<User | null>;
 
-  findUserByEmailWithoutPassword(email: string): Promise<SafeUser | null>;
+  findUserByEmailWithoutPassword(
+    email: string,
+  ): Promise<CreateUserResponse | null>;
 
   findUserById(id: number): Promise<UserWithRelations | null>;
 }
