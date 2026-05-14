@@ -127,8 +127,11 @@ export class OrderRepository implements IOrderRepository {
         });
       }
 
-      // Delete the order (cascade deletes the order items)
-      await trx.order.delete({ where: { orderId } });
+      // Cancel the order after restoring stock
+      await trx.order.update({
+        where: { orderId },
+        data: { status: "CANCELLED" },
+      });
     });
   }
 }

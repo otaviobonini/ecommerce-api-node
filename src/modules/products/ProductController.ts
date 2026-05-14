@@ -15,12 +15,8 @@ class ProductController {
     return res.status(201).json(product);
   }
   async editProduct(req: Request, res: Response): Promise<Response> {
-    let productId = Number(req.params.productId);
-    if (!productId) {
-      throw new AppError(401, "Product id not valid");
-    }
-
     const data: CreateProductInput = req.body;
+    const productId = Number(req.params.productId);
     const product = await this.service.editProduct(data, productId);
     return res.status(200).json(product);
   }

@@ -26,29 +26,30 @@ webhookRouter.post(
 // Authenticated routes
 router.post(
   "/orders",
-  validateRequest(CreateOrderSchema, "body"),
   authMiddleware,
+  validateRequest(CreateOrderSchema, "body"),
   controller.createOrder.bind(controller),
 );
 router.get(
   "/orders/me",
-  validateRequest(GetUserOrdersSchema, "query"),
   authMiddleware,
+  validateRequest(GetUserOrdersSchema, "query"),
+
   controller.getUserOrders.bind(controller),
 );
 router.get(
   "/orders/:orderId",
-  validateRequest(OrderIdParamSchema, "params"),
   authMiddleware,
+  validateRequest(OrderIdParamSchema, "params"),
   controller.getOrderById.bind(controller),
 );
 
 // Admin
 router.get(
   "/orders",
-  validateRequest(GetAllOrdersSchema, "query"),
   authMiddleware,
   adminMiddleware,
+  validateRequest(GetAllOrdersSchema, "query"),
   controller.getAllOrders.bind(controller),
 );
 

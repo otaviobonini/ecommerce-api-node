@@ -33,6 +33,7 @@ app.use(
   }),
 );
 
+app.use("/health", (req, res) => res.status(200).json({ status: "ok" }));
 app.use("/", AuthLimiter, authRoutes);
 app.use("/", ProductLimiter, productRoutes);
 app.use("/", OrderLimiter, orderRoutes);

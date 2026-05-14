@@ -9,11 +9,15 @@ export class StripeGateway implements IPaymentGateway {
     this.stripe = new Stripe(env.STRIPE_SECRET_KEY);
   }
 
-  async createCheckoutSession({ orderId, total, items }: any) {
+  async createCheckoutSession(params: {
+    orderId: number;
+    total: number;
+    items: Array<{ name: string; quantity: number; unitPrice: number }>;
+  }): Promise<{ paymentLink: string; sessionId: string }> {
     const session = await this.stripe.checkout.sessions.create({
       payment_method_types: ["card", "pix", "boleto"],
       mode: "payment",
-      line_items: items.map((item: any) => ({
+      line_items: params.items.map((item) => ({
         quantity: item.quantity,
         price_data: {
           currency: "brl",
@@ -21,9 +25,9 @@ export class StripeGateway implements IPaymentGateway {
           product_data: { name: item.name },
         },
       })),
-      metadata: { orderId: String(orderId) },
-      success_url: `${env.APP_URL}/orders/${orderId}?status=success`,
-      cancel_url: `${env.APP_URL}/orders/${orderId}?status=cancelled`,
+      metadata: { orderId: String(params.orderId) },
+      success_url: `${env.APP_URL}/orders/${params.orderId}?status=success`,
+      cancel_url: `${env.APP_URL}/orders/${params.orderId}?status=cancelled`,
     });
 
     return {
