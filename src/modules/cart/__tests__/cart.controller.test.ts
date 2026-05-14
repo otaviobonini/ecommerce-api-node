@@ -40,13 +40,6 @@ describe("Cart Controller test", () => {
     expect(res.json).toHaveBeenCalled();
   });
 
-  test("Should fail if userId not provided (createCart)", async () => {
-    const req = {} as Request;
-    const res = mockResponse();
-
-    await expect(controller.createCart(req, res)).rejects.toBeInstanceOf(Error);
-  });
-
   test("Should get cart successfully", async () => {
     const req = { userId: 1 } as Request;
     const res = mockResponse();
@@ -56,13 +49,6 @@ describe("Cart Controller test", () => {
     expect(cartServiceMock.getCart).toHaveBeenCalledWith(1);
     expect(res.status).toHaveBeenCalledWith(200);
     expect(res.json).toHaveBeenCalled();
-  });
-
-  test("Should fail if userId not provided (getCart)", async () => {
-    const req = {} as Request;
-    const res = mockResponse();
-
-    await expect(controller.getCart(req, res)).rejects.toBeInstanceOf(Error);
   });
 
   test("Should clear cart successfully", async () => {

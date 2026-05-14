@@ -59,6 +59,7 @@ export class CartRepository implements ICartRepository {
       },
     });
   }
+
   async deleteCartItem(cartItemId: number) {
     return prisma.cartItem.delete({
       where: { cartItemId },

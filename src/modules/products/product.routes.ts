@@ -1,5 +1,4 @@
 import { Router } from "express";
-import ProductController from "./ProductController.js";
 import {
   CreateProductSchema,
   EditProductSchema,
@@ -7,14 +6,11 @@ import {
   ProductIdParamSchema,
 } from "../../schemas/product.schema.js";
 import { validateRequest } from "../../middlewares/validate.js";
-import ProductService from "./ProductService.js";
-import { ProductRepository } from "../../repositories/ProductRepository.js";
 import { adminMiddleware } from "../../middlewares/adminMiddleware.js";
 import { authMiddleware } from "../../middlewares/authMiddleware.js";
+import { makeProductController } from "./product.factory.js";
 
-const Controller = new ProductController(
-  new ProductService(new ProductRepository()),
-);
+const Controller = makeProductController();
 
 const router = Router();
 

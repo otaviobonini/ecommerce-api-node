@@ -112,30 +112,4 @@ describe("Product Controller test", () => {
     expect(res.status).toHaveBeenCalledWith(200);
     expect(res.json).toHaveBeenCalled();
   });
-  test("Should throw error if productId is invalid", async () => {
-    const req = {
-      params: { productId: "abc" },
-      userId: 1,
-      body: {},
-    } as unknown as Request;
-
-    const res = {} as Response;
-
-    await expect(controller.editProduct(req, res)).rejects.toThrow(
-      "Product id not valid",
-    );
-  });
-  test("Should throw error if user is not authenticated on edit", async () => {
-    const req = {
-      params: { productId: "1" },
-      userId: undefined,
-      body: {},
-    } as unknown as Request;
-
-    const res = {} as Response;
-
-    await expect(controller.editProduct(req, res)).rejects.toThrow(
-      "Not Authenticated",
-    );
-  });
 });

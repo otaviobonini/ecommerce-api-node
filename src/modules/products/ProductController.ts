@@ -15,24 +15,13 @@ class ProductController {
     return res.status(201).json(product);
   }
   async editProduct(req: Request, res: Response): Promise<Response> {
-    const userId = req.userId;
-    let productId = Number(req.params.productId);
-    if (!productId) {
-      throw new AppError(401, "Product id not valid");
-    }
-    if (!userId) {
-      throw new AppError(401, "Not Authenticated");
-    }
     const data: CreateProductInput = req.body;
+    const productId = Number(req.params.productId);
     const product = await this.service.editProduct(data, productId);
     return res.status(200).json(product);
   }
   async deleteProduct(req: Request, res: Response): Promise<Response> {
     let productId = Number(req.params.productId);
-    const userId = req.userId;
-    if (!userId) {
-      throw new AppError(401, "Not Authenticated");
-    }
     await this.service.deleteProduct(productId);
     return res.status(204).send();
   }
