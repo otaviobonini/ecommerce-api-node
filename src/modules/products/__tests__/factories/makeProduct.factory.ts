@@ -45,3 +45,19 @@ export const ProductList = [
     stock: 3,
   },
 ];
+
+export const ProductListJson = [
+  {
+    productId: 1,
+    productName: "Produto Teste",
+    productPrice: "99.9",
+    stock: 10,
+  },
+  { productId: 2, productName: "Mouse Gamer", productPrice: "150", stock: 5 },
+  {
+    productId: 3,
+    productName: "Teclado Mecânico",
+    productPrice: "300",
+    stock: 3,
+  },
+];
