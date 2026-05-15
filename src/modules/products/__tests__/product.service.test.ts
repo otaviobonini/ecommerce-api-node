@@ -7,6 +7,16 @@ import {
 } from "./factories/makeProduct.factory.js";
 import { IProductRepository } from "../../../types/IProductRepository.js";
 
+jest.mock("../../../database/redis.js", () => ({
+  redis: {
+    get: jest.fn(),
+    set: jest.fn(),
+    del: jest.fn(),
+    keys: jest.fn(),
+  },
+}));
+import { redis } from "../../../database/redis.js";
+
 const productRepositoryMock: jest.Mocked<IProductRepository> = {
   createProduct: jest.fn(),
   editProduct: jest.fn(),
@@ -14,6 +24,10 @@ const productRepositoryMock: jest.Mocked<IProductRepository> = {
   getProducts: jest.fn(),
   findProductById: jest.fn(),
 };
+
+jest.mock("../../../database/cache.js", () => ({
+  invalidateCache: jest.fn().mockResolvedValue(undefined as never),
+}));
 
 describe("Product service tests", () => {
   let service: ProductService;
@@ -44,10 +58,21 @@ describe("Product service tests", () => {
     expect(productRepositoryMock.deleteProduct).toHaveBeenCalledWith(1);
     expect(result).toBe(ProductData);
   });
-  test("Should return products", async () => {
+  test("Should return products without cache", async () => {
     productRepositoryMock.getProducts.mockResolvedValue(ProductList);
     const result = await service.listProducts();
     expect(productRepositoryMock.getProducts).toHaveBeenCalled();
     expect(result).toBe(ProductList);
+  });
+  test("Should return products with cache", async () => {
+    jest.mocked(redis.get).mockResolvedValue(null);
+    productRepositoryMock.getProducts.mockResolvedValue(ProductList);
+
+    const result = await service.listProducts();
+
+    expect(redis.get).toHaveBeenCalled();
+    expect(productRepositoryMock.getProducts).toHaveBeenCalled();
+    expect(redis.set).toHaveBeenCalled();
+    expect(result).toEqual(ProductList);
   });
 });
