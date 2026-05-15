@@ -4,6 +4,7 @@ import {
   CreateProductInputData,
   ProductData,
   ProductList,
+  ProductListJson,
 } from "./factories/makeProduct.factory.js";
 import { IProductRepository } from "../../../types/IProductRepository.js";
 
@@ -65,14 +66,13 @@ describe("Product service tests", () => {
     expect(result).toBe(ProductList);
   });
   test("Should return products with cache", async () => {
-    jest.mocked(redis.get).mockResolvedValue(null);
-    productRepositoryMock.getProducts.mockResolvedValue(ProductList);
+    jest.mocked(redis.get).mockResolvedValue(JSON.stringify(ProductList));
 
     const result = await service.listProducts();
 
     expect(redis.get).toHaveBeenCalled();
-    expect(productRepositoryMock.getProducts).toHaveBeenCalled();
-    expect(redis.set).toHaveBeenCalled();
-    expect(result).toEqual(ProductList);
+    expect(productRepositoryMock.getProducts).not.toHaveBeenCalled();
+    expect(redis.set).not.toHaveBeenCalled();
+    expect(result).toEqual(ProductListJson);
   });
 });
