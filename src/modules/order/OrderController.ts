@@ -1,12 +1,13 @@
 import OrderService from "./OrderService.js";
 import { Request, Response } from "express";
 import { AppError } from "../../common/AppError.js";
+import { AuthenticatedRequest } from "../../types/authenticatedRequest.js";
 
 class OrderController {
   constructor(private service: OrderService) {}
 
-  async createOrder(req: Request, res: Response) {
-    const userId = req.userId!;
+  async createOrder(req: AuthenticatedRequest, res: Response) {
+    const userId = req.userId;
 
     const { addressId } = req.body;
     const result = await this.service.createOrder(userId, addressId);
@@ -19,14 +20,14 @@ class OrderController {
     await this.service.handleWebhook(req.body as Buffer, signature);
     return res.status(200).json({ received: true });
   }
-  async getOrderById(req: Request, res: Response) {
-    const userId = req.userId!;
+  async getOrderById(req: AuthenticatedRequest, res: Response) {
+    const userId = req.userId;
     const orderId = Number(req.params.orderId);
     const order = await this.service.getOrderById(orderId, userId);
     return res.status(200).json(order);
   }
-  async getUserOrders(req: Request, res: Response) {
-    const userId = req.userId!;
+  async getUserOrders(req: AuthenticatedRequest, res: Response) {
+    const userId = req.userId;
 
     const { status, offset, limit } = req.query;
     const orders = await this.service.getOrdersByUserId(

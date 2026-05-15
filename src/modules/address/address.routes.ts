@@ -6,6 +6,7 @@ import {
   CreateAddressSchema,
   EditAddressSchema,
 } from "../../schemas/address.schema.js";
+import { AuthenticatedRequest } from "../../types/authenticatedRequest.js";
 import { authMiddleware } from "../../middlewares/authMiddleware.js";
 import { makeAddressController } from "./address.factory.js";
 
@@ -16,31 +17,29 @@ router.post(
   "/address",
   authMiddleware,
   validateRequest(CreateAddressSchema, "body"),
-  controller.createAddress.bind(controller),
+  (req, res) => controller.createAddress(req as AuthenticatedRequest, res),
 );
-router.get(
-  "/address",
-  authMiddleware,
-  controller.getUserAddresses.bind(controller),
+router.get("/address", authMiddleware, (req, res) =>
+  controller.getUserAddresses(req as AuthenticatedRequest, res),
 );
 router.delete(
   "/address/:addressId",
   authMiddleware,
   validateRequest(AddressIdParamSchema, "params"),
-  controller.deleteAddress.bind(controller),
+  (req, res) => controller.deleteAddress(req as AuthenticatedRequest, res),
 );
 router.put(
   "/address/:addressId/default",
   authMiddleware,
   validateRequest(AddressIdParamSchema, "params"),
-  controller.setDefaultAddress.bind(controller),
+  (req, res) => controller.setDefaultAddress(req as AuthenticatedRequest, res),
 );
 router.put(
   "/address/:addressId",
   authMiddleware,
   validateRequest(AddressIdParamSchema, "params"),
   validateRequest(EditAddressSchema, "body"),
-  controller.editAddress.bind(controller),
+  (req, res) => controller.editAddress(req as AuthenticatedRequest, res),
 );
 
 export default router;

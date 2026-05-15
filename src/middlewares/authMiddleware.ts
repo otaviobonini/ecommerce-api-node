@@ -3,6 +3,7 @@ import jwt, { JwtPayload } from "jsonwebtoken";
 import { env } from "../schemas/env.schema.js";
 import { AppError } from "../common/AppError.js";
 import { JwtPayloadSchema } from "../schemas/auth.schema.js";
+import { AuthenticatedRequest } from "../types/authenticatedRequest.js";
 
 export const authMiddleware = (
   req: Request,
@@ -20,8 +21,10 @@ export const authMiddleware = (
   try {
     const decoded = jwt.verify(auth[1], env.JWT_SECRET) as JwtPayload;
     const { id, role } = JwtPayloadSchema.parse(decoded);
-    req.userId = id;
-    req.userRole = role;
+    const authenticatedReq = req as AuthenticatedRequest;
+    authenticatedReq.userId = id;
+    authenticatedReq.userRole = role;
+
     next();
   } catch (error) {
     return next(new AppError(401, "Invalid token"));

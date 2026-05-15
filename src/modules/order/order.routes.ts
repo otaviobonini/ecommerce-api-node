@@ -10,6 +10,7 @@ import {
   OrderIdParamSchema,
 } from "../../schemas/order.schema.js";
 import { makeOrderController } from "./order.factory.js";
+import { AuthenticatedRequest } from "../../types/authenticatedRequest.js";
 
 const router = Router();
 
@@ -28,20 +29,20 @@ router.post(
   "/orders",
   authMiddleware,
   validateRequest(CreateOrderSchema, "body"),
-  controller.createOrder.bind(controller),
+  (req, res) => controller.createOrder(req as AuthenticatedRequest, res),
 );
 router.get(
   "/orders/me",
   authMiddleware,
   validateRequest(GetUserOrdersSchema, "query"),
 
-  controller.getUserOrders.bind(controller),
+  (req, res) => controller.getUserOrders(req as AuthenticatedRequest, res),
 );
 router.get(
   "/orders/:orderId",
   authMiddleware,
   validateRequest(OrderIdParamSchema, "params"),
-  controller.getOrderById.bind(controller),
+  (req, res) => controller.getOrderById(req as AuthenticatedRequest, res),
 );
 
 // Admin

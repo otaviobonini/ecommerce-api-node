@@ -2,6 +2,7 @@ import CartService from "../CartService.js";
 import CartController from "../CartController.js";
 import { Request, Response } from "express";
 import { Prisma } from "@prisma/client";
+import { AuthenticatedRequest } from "../../../types/authenticatedRequest.js";
 
 const cartServiceMock: jest.Mocked<CartService> = {
   createCart: jest.fn().mockResolvedValue({ id: 1 }),
@@ -30,7 +31,7 @@ describe("Cart Controller test", () => {
   };
 
   test("Should create cart successfully", async () => {
-    const req = { userId: 1 } as Request;
+    const req = { userId: 1 } as AuthenticatedRequest;
     const res = mockResponse();
 
     await controller.createCart(req, res);
@@ -41,7 +42,7 @@ describe("Cart Controller test", () => {
   });
 
   test("Should get cart successfully", async () => {
-    const req = { userId: 1 } as Request;
+    const req = { userId: 1 } as AuthenticatedRequest;
     const res = mockResponse();
 
     await controller.getCart(req, res);
@@ -55,7 +56,7 @@ describe("Cart Controller test", () => {
     const req = {
       params: { cartId: "1" },
       userId: 1,
-    } as unknown as Request;
+    } as unknown as AuthenticatedRequest;
 
     const res = mockResponse();
 
@@ -69,7 +70,7 @@ describe("Cart Controller test", () => {
     const req = {
       body: { cartId: 1, productId: 1, quantity: 2 },
       userId: 1,
-    } as unknown as Request;
+    } as unknown as AuthenticatedRequest;
     const res = mockResponse();
     cartServiceMock.createCartItem.mockResolvedValue({
       cartItemId: 1,
@@ -90,7 +91,7 @@ describe("Cart Controller test", () => {
     const req = {
       params: { cartItemId: "1" },
       userId: 1,
-    } as unknown as Request;
+    } as unknown as AuthenticatedRequest;
     const res = mockResponse();
     await controller.deleteCartItem(req, res);
     expect(cartServiceMock.deleteCartItem).toHaveBeenCalledWith(1, 1);
@@ -102,7 +103,7 @@ describe("Cart Controller test", () => {
       params: { cartItemId: "1" },
       userId: 1,
       body: { quantity: 5 },
-    } as unknown as Request;
+    } as unknown as AuthenticatedRequest;
     const res = mockResponse();
     cartServiceMock.cartQuantityItem.mockResolvedValue({
       cartItemId: 1,
@@ -119,7 +120,7 @@ describe("Cart Controller test", () => {
     const req = {
       params: { cartId: "1" },
       userId: 1,
-    } as unknown as Request;
+    } as unknown as AuthenticatedRequest;
     const res = mockResponse();
     cartServiceMock.getCartItem.mockResolvedValue([
       {
