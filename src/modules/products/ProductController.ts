@@ -4,7 +4,6 @@ import {
   CreateProductInput,
   GetProductsQueryInput,
 } from "../../schemas/product.schema.js";
-import { AppError } from "../../common/AppError.js";
 
 class ProductController {
   constructor(private service: ProductService) {}

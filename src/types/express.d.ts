@@ -11,3 +11,5 @@ export interface AuthenticatedRequest extends Request {
   userId: number;
   userRole: Role;
 }
+
+export {};

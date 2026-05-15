@@ -9,21 +9,24 @@ import {
 } from "../../schemas/cart.schema.js";
 import { authMiddleware } from "../../middlewares/authMiddleware.js";
 import { makeCartController } from "./cart.factory.js";
+import { AuthenticatedRequest } from "../../types/express.js";
 
 const router = Router();
 
 const controller = makeCartController();
 
 // Cart
-router.get("/carts", authMiddleware, controller.getCart.bind(controller));
-
-router.post("/carts", authMiddleware, controller.createCart.bind(controller));
-
+router.get("/carts", authMiddleware, (req, res) =>
+  controller.getCart(req as AuthenticatedRequest, res),
+);
+router.post("/carts", authMiddleware, (req, res) =>
+  controller.createCart(req as AuthenticatedRequest, res),
+);
 router.delete(
   "/carts/:cartId",
   authMiddleware,
   validateRequest(CartIdParamSchema, "params"),
-  controller.clearCart.bind(controller),
+  (req, res) => controller.clearCart(req as AuthenticatedRequest, res),
 );
 
 // Cart Items
@@ -31,21 +34,21 @@ router.get(
   "/carts/:cartId/items",
   authMiddleware,
   validateRequest(CartIdParamSchema, "params"),
-  controller.getCartItem.bind(controller),
+  (req, res) => controller.getCartItem(req as AuthenticatedRequest, res),
 );
 
 router.post(
   "/carts/items",
   authMiddleware,
   validateRequest(CreateCartItemSchema, "body"),
-  controller.createCartItem.bind(controller),
+  (req, res) => controller.createCartItem(req as AuthenticatedRequest, res),
 );
 
 router.delete(
   "/carts/items/:cartItemId",
   authMiddleware,
   validateRequest(CartItemIdParamSchema, "params"),
-  controller.deleteCartItem.bind(controller),
+  (req, res) => controller.deleteCartItem(req as AuthenticatedRequest, res),
 );
 
 router.patch(
@@ -53,7 +56,7 @@ router.patch(
   authMiddleware,
   validateRequest(CartItemIdParamSchema, "params"),
   validateRequest(UpdateCartItemQuantitySchema, "body"),
-  controller.cartQuantityItem.bind(controller),
+  (req, res) => controller.cartQuantityItem(req as AuthenticatedRequest, res),
 );
 
 export default router;
