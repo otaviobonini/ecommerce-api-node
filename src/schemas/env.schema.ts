@@ -11,6 +11,7 @@ const envSchema = z.object({
   STRIPE_SECRET_KEY: z.string().startsWith("sk_"),
   STRIPE_WEBHOOK_SECRET: z.string().startsWith("whsec_"),
   APP_URL: z.string().url(),
+  REDIS_URL: z.string().url().default("redis://localhost:6379"),
 });
 
 export const env = envSchema.parse(process.env);
