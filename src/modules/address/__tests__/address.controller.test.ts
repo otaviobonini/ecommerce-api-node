@@ -1,3 +1,4 @@
+import { AuthenticatedRequest } from "../../../types/authenticatedRequest.js";
 import { AddressController } from "../AddressController.js";
 import { AddressService } from "../AddressService.js";
 import { Request, Response } from "express";
@@ -26,7 +27,7 @@ describe("Address Controller tests", () => {
         state: "CA",
         zipCode: "12345",
       },
-    } as unknown as Request;
+    } as unknown as AuthenticatedRequest;
     const res = {
       status: jest.fn().mockReturnThis(),
       json: jest.fn(),
@@ -42,7 +43,7 @@ describe("Address Controller tests", () => {
   });
 
   test("Should get user addresses", async () => {
-    const req = { userId: 1 } as unknown as Request;
+    const req = { userId: 1 } as unknown as AuthenticatedRequest;
     const res = {
       status: jest.fn().mockReturnThis(),
       json: jest.fn(),
@@ -60,7 +61,7 @@ describe("Address Controller tests", () => {
     const req = {
       userId: 1,
       params: { addressId: 1 },
-    } as unknown as Request;
+    } as unknown as AuthenticatedRequest;
     const res = {
       status: jest.fn().mockReturnThis(),
       send: jest.fn(),
@@ -76,7 +77,7 @@ describe("Address Controller tests", () => {
     const req = {
       userId: 1,
       params: { addressId: 1 },
-    } as unknown as Request;
+    } as unknown as AuthenticatedRequest;
     const res = {
       status: jest.fn().mockReturnThis(),
       send: jest.fn(),
@@ -99,7 +100,7 @@ describe("Address Controller tests", () => {
       userId: 1,
       params: { addressId: 1 },
       body,
-    } as unknown as Request;
+    } as unknown as AuthenticatedRequest;
     const res = {
       status: jest.fn().mockReturnThis(),
       json: jest.fn(),

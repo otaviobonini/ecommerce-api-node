@@ -6,7 +6,7 @@ import {
   CreateAddressSchema,
   EditAddressSchema,
 } from "../../schemas/address.schema.js";
-import { AuthenticatedRequest } from "../../types/express.js";
+import { AuthenticatedRequest } from "../../types/authenticatedRequest.js";
 import { authMiddleware } from "../../middlewares/authMiddleware.js";
 import { makeAddressController } from "./address.factory.js";
 

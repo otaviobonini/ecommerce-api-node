@@ -1,6 +1,6 @@
 import { AppError } from "../../common/AppError.js";
 import { CreateCartItemInput } from "../../schemas/cart.schema.js";
-import { AuthenticatedRequest } from "../../types/express.js";
+import { AuthenticatedRequest } from "../../types/authenticatedRequest.js";
 import CartService from "./CartService.js";
 import { Request, Response } from "express";
 

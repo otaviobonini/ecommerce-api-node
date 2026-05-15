@@ -9,7 +9,7 @@ import {
 } from "../../schemas/cart.schema.js";
 import { authMiddleware } from "../../middlewares/authMiddleware.js";
 import { makeCartController } from "./cart.factory.js";
-import { AuthenticatedRequest } from "../../types/express.js";
+import { AuthenticatedRequest } from "../../types/authenticatedRequest.js";
 
 const router = Router();
 

@@ -10,7 +10,7 @@ import {
   OrderIdParamSchema,
 } from "../../schemas/order.schema.js";
 import { makeOrderController } from "./order.factory.js";
-import { AuthenticatedRequest } from "../../types/express.js";
+import { AuthenticatedRequest } from "../../types/authenticatedRequest.js";
 
 const router = Router();
 

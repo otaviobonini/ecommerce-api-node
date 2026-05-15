@@ -1,7 +1,7 @@
 import OrderService from "./OrderService.js";
 import { Request, Response } from "express";
 import { AppError } from "../../common/AppError.js";
-import { AuthenticatedRequest } from "../../types/express.js";
+import { AuthenticatedRequest } from "../../types/authenticatedRequest.js";
 
 class OrderController {
   constructor(private service: OrderService) {}

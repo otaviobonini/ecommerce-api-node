@@ -4,7 +4,7 @@ import {
   CreateAddressInput,
   EditAddressInput,
 } from "../../schemas/address.schema.js";
-import { AuthenticatedRequest } from "../../types/express.js";
+import { AuthenticatedRequest } from "../../types/authenticatedRequest.js";
 
 export class AddressController {
   constructor(private address: AddressService) {}
