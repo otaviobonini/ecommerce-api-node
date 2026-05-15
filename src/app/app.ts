@@ -20,11 +20,9 @@ import cartRoutes from "../modules/cart/cart.routes.js";
 import addressRoutes from "../modules/address/address.routes.js";
 import orderRoutes, { webhookRouter } from "../modules/order/order.routes.js";
 import { env } from "../schemas/env.schema.js";
+import { healthCheck } from "../modules/health/health.controller.js";
 
 const app = express();
-app.use("/", webhookRouter);
-app.use("/docs", swaggerUi.serve, swaggerUi.setup(swaggerSpec));
-app.use(express.json());
 app.use(helmet());
 app.use(
   cors({
@@ -33,7 +31,12 @@ app.use(
   }),
 );
 
-app.use("/health", (req, res) => res.status(200).json({ status: "ok" }));
+app.use("/", webhookRouter);
+
+app.use("/docs", swaggerUi.serve, swaggerUi.setup(swaggerSpec));
+app.get("/health", healthCheck);
+app.use(express.json());
+
 app.use("/", AuthLimiter, authRoutes);
 app.use("/", ProductLimiter, productRoutes);
 app.use("/", OrderLimiter, orderRoutes);
