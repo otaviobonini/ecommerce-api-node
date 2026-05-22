@@ -172,6 +172,7 @@ describe("Order Service Tests", () => {
         type: "checkout.session.completed",
         orderId: 1,
       });
+      orderRepositoryMock.getOrderById.mockResolvedValue(mockOrderWithItems);
 
       orderRepositoryMock.editOrderStatus.mockResolvedValue(mockOrderWithItems);
 

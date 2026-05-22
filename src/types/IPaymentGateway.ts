@@ -13,6 +13,6 @@ export interface IPaymentGateway {
 }
 
 export type WebhookEvent = {
-  type: "payment_intent.succeeded" | "payment_intent.failed" | string;
+  type: "checkout.session.completed" | "payment_intent.payment_failed";
   orderId: number;
 };

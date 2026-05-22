@@ -63,6 +63,8 @@ class OrderService {
   async handleWebhook(payload: Buffer, signature: string) {
     const event = this.payment.constructWebhookEvent(payload, signature);
     if (event.type === "checkout.session.completed") {
+      const order = await this.order.getOrderById(event.orderId);
+      if (!order || order.status === "PAID") return;
       await this.order.editOrderStatus(event.orderId, "PAID");
     } else if (event.type === "payment_intent.payment_failed") {
       await this.order.editOrderStatus(event.orderId, "CANCELLED");

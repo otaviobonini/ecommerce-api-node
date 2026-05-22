@@ -15,6 +15,7 @@ API construída com foco em boas práticas de arquitetura backend, incluindo:
 - Transações de banco de dados com rollback automático em caso de falha no pagamento
 - Testes unitários com Jest e mocks por interface
 - Documentação interativa com Swagger
+- Detalhe! o projeto não precisa de async error handling nos controllers já que o Express 5 resolve
 
 ## Tecnologias
 
