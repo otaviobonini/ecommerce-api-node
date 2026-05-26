@@ -47,7 +47,8 @@ export class StripeGateway implements IPaymentGateway {
     const orderId = Number(
       (event.data.object as Stripe.Checkout.Session).metadata?.orderId,
     );
+    const type = event.type as WebhookEvent["type"];
 
-    return { type: event.type, orderId };
+    return { type, orderId };
   }
 }
