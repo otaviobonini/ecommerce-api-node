@@ -42,10 +42,23 @@ model Product {
   productId Int @id @default(autoincrement())
   productName String
   productPrice Decimal
+  productDescription String?
   stock Int @default(0)
-
   carts CartItem[]
   orders OrderItem[]
+  images ProductImage[]
+  isFeatured   Boolean   @default(false)   
+  categoryId   Int?
+  category     Category? @relation(fields: [categoryId], references: [categoryId])
+}
+
+model ProductImage {
+  imageId   Int     @id @default(autoincrement())
+  productId Int
+  url       String
+  isPrimary Boolean @default(false)  
+  
+  product Product @relation(onDelete: Cascade, fields: [productId], references: [productId])
 }
 
 model Cart {
@@ -82,6 +95,12 @@ model Order {
   user User @relation(onDelete: Cascade,references: [userId], fields: [userId])
   address Address @relation(references: [addressId], fields: [addressId])
   orderItems OrderItem[]
+}
+
+model Category {
+  categoryId   Int       @id @default(autoincrement())
+  name         String    @unique
+  products     Product[]
 }
 
 model OrderItem {
