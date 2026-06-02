@@ -133,6 +133,9 @@ describe("Cart Controller test", () => {
           productName: "Produto teste",
           productPrice: new Prisma.Decimal(10),
           stock: 5,
+          productDescription: null,
+          isFeatured: false,
+          categoryId: null,
         },
       },
     ]);

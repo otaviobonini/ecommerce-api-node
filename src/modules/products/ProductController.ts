@@ -2,6 +2,7 @@ import { Request, Response } from "express";
 import ProductService from "./ProductService.js";
 import {
   CreateProductInput,
+  EditProductInput,
   GetProductsQueryInput,
 } from "../../schemas/product.schema.js";
 
@@ -14,7 +15,7 @@ class ProductController {
     return res.status(201).json(product);
   }
   async editProduct(req: Request, res: Response): Promise<Response> {
-    const data: CreateProductInput = req.body;
+    const data: EditProductInput = req.body;
     const productId = Number(req.params.productId);
     const product = await this.service.editProduct(data, productId);
     return res.status(200).json(product);

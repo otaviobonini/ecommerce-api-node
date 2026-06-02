@@ -1,4 +1,5 @@
 import { Product } from "@prisma/client";
+import { ProductWithImages } from "../types/product.types.js";
 
 import {
   CreateProductInput,
@@ -12,7 +13,7 @@ export interface IProductRepository {
 
   deleteProduct(productId: number): Promise<Product>;
 
-  getProducts(limit: number, offset: number): Promise<Product[]>;
+  getProducts(limit: number, offset: number): Promise<ProductWithImages[]>;
 
-  findProductById(productId: number): Promise<Product | null>;
+  findProductById(productId: number): Promise<ProductWithImages | null>;
 }
