@@ -1,4 +1,7 @@
-import { CreateProductInput } from "../../schemas/product.schema.js";
+import {
+  CreateProductInput,
+  EditProductInput,
+} from "../../schemas/product.schema.js";
 import { IProductRepository } from "../../types/IProductRepository.js";
 import { redis } from "../../database/redis.js";
 import { invalidateCache } from "../../database/cache.js";
@@ -12,7 +15,7 @@ class ProductService {
     return product;
   }
 
-  async editProduct(data: CreateProductInput, productId: number) {
+  async editProduct(data: EditProductInput, productId: number) {
     const product = await this.product.editProduct(data, productId);
     await invalidateCache("products:*");
     return product;

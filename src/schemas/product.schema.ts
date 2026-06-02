@@ -4,6 +4,9 @@ export const CreateProductSchema = z.object({
   productName: z.string(),
   productPrice: z.coerce.number().positive(),
   stock: z.coerce.number().int().positive(),
+  productDescription: z.string().optional(),
+  isFeatured: z.boolean().optional(),
+  categoryId: z.coerce.number().int().positive().optional().nullable(),
 });
 
 export const EditProductSchema = z.object({

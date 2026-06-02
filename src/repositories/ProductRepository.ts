@@ -1,5 +1,8 @@
 import { prisma } from "../database/prisma.js";
-import { CreateProductInput } from "../schemas/product.schema.js";
+import {
+  CreateProductInput,
+  EditProductInput,
+} from "../schemas/product.schema.js";
 import { IProductRepository } from "../types/IProductRepository.js";
 
 export class ProductRepository implements IProductRepository {
@@ -9,7 +12,7 @@ export class ProductRepository implements IProductRepository {
     });
     return product;
   }
-  async editProduct(data: CreateProductInput, productId: number) {
+  async editProduct(data: EditProductInput, productId: number) {
     const product = await prisma.product.update({
       where: { productId: productId },
       data: data,
@@ -24,10 +27,14 @@ export class ProductRepository implements IProductRepository {
     const products = await prisma.product.findMany({
       take: limit,
       skip: offset,
+      include: { images: true },
     });
     return products;
   }
   async findProductById(productId: number) {
-    return await prisma.product.findUnique({ where: { productId } });
+    return await prisma.product.findUnique({
+      where: { productId },
+      include: { images: true },
+    });
   }
 }
