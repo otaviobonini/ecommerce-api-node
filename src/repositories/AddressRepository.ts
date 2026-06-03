@@ -3,7 +3,7 @@ import {
   CreateAddressInput,
   EditAddressInput,
 } from "../schemas/address.schema.js";
-import { IAddressRepository } from "../types/IAddressRepository.js";
+import { IAddressRepository } from "../interfaces/IAddressRepository.js";
 
 export class AddressRepository implements IAddressRepository {
   async createAddress(data: CreateAddressInput, userId: number) {

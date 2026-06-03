@@ -1,5 +1,5 @@
 import { ProductImage } from "@prisma/client";
-import { IImageRepository } from "../types/IImageRepository.js";
+import { IImageRepository } from "../interfaces/IImageRepository.js";
 import { prisma } from "../database/prisma.js";
 
 export class ImageRepository implements IImageRepository {

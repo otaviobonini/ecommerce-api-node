@@ -3,7 +3,7 @@ import {
   CreateProductInput,
   EditProductInput,
 } from "../schemas/product.schema.js";
-import { IProductRepository } from "../types/IProductRepository.js";
+import { IProductRepository } from "../interfaces/IProductRepository.js";
 
 export class ProductRepository implements IProductRepository {
   async createProduct(data: CreateProductInput) {

@@ -1,6 +1,9 @@
 import { Status } from "@prisma/client";
 import { prisma } from "../database/prisma.js";
-import { IOrderRepository, OrderWithItems } from "../types/IOrderRepository.js";
+import {
+  IOrderRepository,
+  OrderWithItems,
+} from "../interfaces/IOrderRepository.js";
 import { AppError } from "../common/AppError.js";
 
 export class OrderRepository implements IOrderRepository {

@@ -5,7 +5,7 @@ import {
   CreateUserResponse,
   UserWithRelations,
 } from "../types/auth.types.js";
-import { IAuthRepository } from "../types/IAuthRepository.js";
+import { IAuthRepository } from "../interfaces/IAuthRepository.js";
 
 export class AuthRepository implements IAuthRepository {
   async createUser(data: CreateUserDTO): Promise<CreateUserResponse> {

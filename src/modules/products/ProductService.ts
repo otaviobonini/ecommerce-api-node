@@ -2,11 +2,11 @@ import {
   CreateProductInput,
   EditProductInput,
 } from "../../schemas/product.schema.js";
-import { IProductRepository } from "../../types/IProductRepository.js";
+import { IProductRepository } from "../../interfaces/IProductRepository.js";
 import { redis } from "../../database/redis.js";
 import { invalidateCache } from "../../database/cache.js";
-import { IImageRepository } from "../../types/IImageRepository.js";
-import { IS3Gateway } from "../../types/IS3Gateway.js";
+import { IImageRepository } from "../../interfaces/IImageRepository.js";
+import { IS3Gateway } from "../../interfaces/IS3Gateway.js";
 import { AppError } from "../../common/AppError.js";
 import { randomUUID } from "crypto";
 

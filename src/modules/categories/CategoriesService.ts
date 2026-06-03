@@ -1,4 +1,4 @@
-import { ICategoryRepository } from "../../types/ICategoriesRepository.js";
+import { ICategoryRepository } from "../../interfaces/ICategoriesRepository.js";
 import { AppError } from "../../common/AppError.js";
 
 export class CategoriesService {

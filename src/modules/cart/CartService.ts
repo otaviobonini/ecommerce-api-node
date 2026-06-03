@@ -1,8 +1,8 @@
 import { CreateCartItemDTO } from "../../types/cart.types.js";
 import { AppError } from "../../common/AppError.js";
 
-import { ICartRepository } from "../../types/ICartRepository.js";
-import { IProductRepository } from "../../types/IProductRepository.js";
+import { ICartRepository } from "../../interfaces/ICartRepository.js";
+import { IProductRepository } from "../../interfaces/IProductRepository.js";
 
 class CartService {
   constructor(

@@ -1,5 +1,5 @@
 import { Product, Category } from "@prisma/client";
-import { ICategoryRepository } from "../types/ICategoriesRepository.js";
+import { ICategoryRepository } from "../interfaces/ICategoriesRepository.js";
 import { prisma } from "../database/prisma.js";
 
 export class CategoriesRepository implements ICategoryRepository {

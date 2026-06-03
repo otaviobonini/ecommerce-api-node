@@ -6,7 +6,7 @@ import {
   ProductList,
   ProductListJson,
 } from "./factories/makeProduct.factory.js";
-import { IProductRepository } from "../../../types/IProductRepository.js";
+import { IProductRepository } from "../../../interfaces/IProductRepository.js";
 
 jest.mock("../../../database/redis.js", () => ({
   redis: {
@@ -17,6 +17,20 @@ jest.mock("../../../database/redis.js", () => ({
   },
 }));
 import { redis } from "../../../database/redis.js";
+import { IS3Gateway } from "../../../interfaces/IS3Gateway.js";
+import { IImageRepository } from "../../../interfaces/IImageRepository.js";
+
+const ImageRepositoryMock: jest.Mocked<IImageRepository> = {
+  uploadImage: jest.fn(),
+  deleteImage: jest.fn(),
+  setPrimaryImage: jest.fn(),
+  findImageById: jest.fn(),
+};
+
+const S3GatewayMock: jest.Mocked<IS3Gateway> = {
+  uploadFile: jest.fn(),
+  deleteFile: jest.fn(),
+};
 
 const productRepositoryMock: jest.Mocked<IProductRepository> = {
   createProduct: jest.fn(),
@@ -34,7 +48,11 @@ describe("Product service tests", () => {
   let service: ProductService;
   beforeEach(() => {
     jest.clearAllMocks();
-    service = new ProductService(productRepositoryMock);
+    service = new ProductService(
+      productRepositoryMock,
+      ImageRepositoryMock,
+      S3GatewayMock,
+    );
   });
   test("Should create a new product", async () => {
     productRepositoryMock.createProduct.mockResolvedValue(ProductData);
