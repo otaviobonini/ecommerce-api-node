@@ -12,6 +12,10 @@ const envSchema = z.object({
   STRIPE_WEBHOOK_SECRET: z.string().startsWith("whsec_"),
   APP_URL: z.string().url(),
   REDIS_URL: z.string().url().default("redis://localhost:6379"),
+  BUCKET_NAME: z.string().nonempty(),
+  BUCKET_REGION: z.string().nonempty(),
+  AWS_ACCESS_KEY_ID: z.string().nonempty(),
+  AWS_SECRET_ACCESS_KEY: z.string().nonempty(),
 });
 
 export const env = envSchema.parse(process.env);

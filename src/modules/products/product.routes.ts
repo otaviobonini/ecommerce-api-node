@@ -9,6 +9,7 @@ import { validateRequest } from "../../middlewares/validate.js";
 import { adminMiddleware } from "../../middlewares/adminMiddleware.js";
 import { authMiddleware } from "../../middlewares/authMiddleware.js";
 import { makeProductController } from "./product.factory.js";
+import upload from "../../middlewares/upload.js";
 
 const Controller = makeProductController();
 

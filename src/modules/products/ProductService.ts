@@ -5,9 +5,14 @@ import {
 import { IProductRepository } from "../../types/IProductRepository.js";
 import { redis } from "../../database/redis.js";
 import { invalidateCache } from "../../database/cache.js";
+import { PutObjectCommand } from "@aws-sdk/client-s3";
+import { IImageRepository } from "../../types/IImageRepository.js";
 
 class ProductService {
-  constructor(private product: IProductRepository) {}
+  constructor(
+    private product: IProductRepository,
+    private image: IImageRepository,
+  ) {}
 
   async createProduct(data: CreateProductInput) {
     const product = await this.product.createProduct(data);
@@ -38,6 +43,12 @@ class ProductService {
       60 * 1, // Cache for 1 minute
     );
     return products;
+  }
+
+  async uploadProductImage(productId: number, buffer: string) {
+    const image = await this.image.uploadImage(productId, buffer);
+
+    return image;
   }
 }
 
