@@ -1,26 +1,46 @@
-import { PutObjectCommand, S3Client } from "@aws-sdk/client-s3";
+import {
+  DeleteObjectCommand,
+  PutObjectCommand,
+  S3Client,
+} from "@aws-sdk/client-s3";
 import { env } from "../schemas/env.schema.js";
+import { IS3Gateway } from "../types/IS3Gateway.js";
 
-const bucketName = env.BUCKET_NAME;
-const bucketRegion = env.BUCKET_REGION;
-const awsAccessKeyId = env.AWS_ACCESS_KEY_ID;
-const awsSecretAccessKey = env.AWS_SECRET_ACCESS_KEY;
+export class S3Gateway implements IS3Gateway {
+  private client: S3Client;
 
-const s3Client = new S3Client({
-  credentials: {
-    accessKeyId: awsAccessKeyId,
-    secretAccessKey: awsSecretAccessKey,
-  },
-  region: bucketRegion,
-});
+  constructor() {
+    this.client = new S3Client({
+      credentials: {
+        accessKeyId: env.AWS_ACCESS_KEY_ID,
+        secretAccessKey: env.AWS_SECRET_ACCESS_KEY,
+      },
+      region: env.BUCKET_REGION,
+    });
+  }
 
-const params = {
-  Bucket: bucketName,
-  Key: fileOriginalName,
-  Body: fileBuffer,
-  ContentType: fileMimetype,
-};
+  async uploadFile(
+    buffer: Buffer,
+    key: string,
+    mimetype: string,
+  ): Promise<string> {
+    await this.client.send(
+      new PutObjectCommand({
+        Bucket: env.BUCKET_NAME,
+        Key: key,
+        Body: buffer,
+        ContentType: mimetype,
+      }),
+    );
+    return `https://${env.BUCKET_NAME}.s3.${env.BUCKET_REGION}.amazonaws.com/${key}`;
+  }
 
-export const command = new PutObjectCommand(params);
-
-await s3.send(command);
+  async deleteFile(key: string): Promise<void> {
+    await this.client.send(
+      new DeleteObjectCommand({
+        Bucket: env.BUCKET_NAME,
+        Key: key,
+      }),
+    );
+  }
+}

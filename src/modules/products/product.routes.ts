@@ -44,4 +44,25 @@ router.patch(
   Controller.editProduct.bind(Controller),
 );
 
+router.post(
+  "/product/:productId/images",
+  authMiddleware,
+  adminMiddleware,
+  validateRequest(ProductIdParamSchema, "params"),
+  upload.single("image"),
+  Controller.uploadImage.bind(Controller),
+);
+router.delete(
+  "/product/:productId/images/:imageId",
+  authMiddleware,
+  adminMiddleware,
+  Controller.deleteImage.bind(Controller),
+);
+router.patch(
+  "/product/:productId/images/:imageId/primary",
+  authMiddleware,
+  adminMiddleware,
+  Controller.setPrimaryImage.bind(Controller),
+);
+
 export default router;
