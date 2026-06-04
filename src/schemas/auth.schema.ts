@@ -25,5 +25,9 @@ export const JwtPayloadSchema = z.object({
   role: z.enum(["USER", "ADMIN"]),
 });
 
+export const RefreshTokenSchema = z.object({
+  refreshToken: z.string().min(1, "Refresh token is required"),
+});
+
 export type CreateUserInput = z.infer<typeof CreateUserSchema>;
 export type LoginUserInput = z.infer<typeof LoginUserSchema>;

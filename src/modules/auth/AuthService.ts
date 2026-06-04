@@ -117,8 +117,19 @@ class AuthService {
     };
   }
 
-  async logout(userId: number): Promise<void> {
+  async logoutAll(userId: number): Promise<void> {
     await this.auth.deleteRefreshTokensByUserId(userId);
+  }
+  async logout(refreshToken: string): Promise<void> {
+    const hashedRefreshToken = crypto
+      .createHash("sha256")
+      .update(refreshToken)
+      .digest("hex");
+    const existingToken = await this.auth.findRefreshToken(hashedRefreshToken);
+    if (!existingToken) {
+      return; // we dont return a error to avoid leaking information about the validity of the token
+    }
+    await this.auth.deleteRefreshToken(existingToken.id);
   }
 }
 
