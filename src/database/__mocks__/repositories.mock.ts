@@ -28,6 +28,7 @@ export const authRepositoryMock: jest.Mocked<IAuthRepository> = {
   createRefreshToken: jest.fn(),
   findRefreshToken: jest.fn(),
   deleteRefreshToken: jest.fn(),
+
   deleteRefreshTokensByUserId: jest.fn(),
 };
 

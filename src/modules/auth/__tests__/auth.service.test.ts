@@ -88,4 +88,95 @@ describe("Auth Service tests", () => {
     await expect(result).rejects.toBeInstanceOf(AppError);
     await expect(result).rejects.toHaveProperty("statusCode", 401);
   });
+
+  // Additional tests for logout and refresh token are here
+
+  test("Should logout successfully with valid refresh token", async () => {
+    authRepositoryMock.findRefreshToken.mockResolvedValue({
+      id: 1,
+      userId: CreatedUser.userId,
+      token: "hashed",
+      expiresAt: new Date(Date.now() + 10000),
+      user: { ...CreatedUser, hashedPassword: "hash", role: "USER" as const },
+    });
+
+    await service.logout("raw-token");
+
+    expect(authRepositoryMock.deleteRefreshToken).toHaveBeenCalledWith(1);
+  });
+
+  test("Should return silently when logout with invalid refresh token", async () => {
+    authRepositoryMock.findRefreshToken.mockResolvedValue(null);
+
+    await expect(service.logout("invalid-token")).resolves.toBeUndefined();
+    expect(authRepositoryMock.deleteRefreshToken).not.toHaveBeenCalled();
+  });
+
+  test("Should logout all sessions by userId", async () => {
+    await service.logoutAll(CreatedUser.userId);
+
+    expect(authRepositoryMock.deleteRefreshTokensByUserId).toHaveBeenCalledWith(
+      CreatedUser.userId,
+    );
+  });
+
+  test("Should renew refresh token successfully", async () => {
+    const futureDate = new Date(Date.now() + 7 * 24 * 60 * 60 * 1000);
+    authRepositoryMock.findRefreshToken.mockResolvedValue({
+      id: 1,
+      userId: CreatedUser.userId,
+      token: "hashed",
+      expiresAt: futureDate,
+      user: { ...CreatedUser, hashedPassword: "hash", role: "USER" as const },
+    });
+    authRepositoryMock.findUserById.mockResolvedValue({
+      ...CreatedUser,
+      role: "USER" as const,
+      address: [],
+      cart: null,
+      order: [],
+    });
+    jwtMock.sign.mockReturnValue("new-access-token" as never);
+
+    const result = await service.renewRefreshToken("raw-token");
+
+    expect(result).toEqual({
+      token: "new-access-token",
+      refreshToken: expect.any(String),
+    });
+    expect(authRepositoryMock.deleteRefreshToken).toHaveBeenCalledWith(1);
+  });
+
+  test("Should fail to renew if refresh token is expired", async () => {
+    const pastDate = new Date(Date.now() - 1000);
+    authRepositoryMock.findRefreshToken.mockResolvedValue({
+      id: 1,
+      userId: CreatedUser.userId,
+      token: "hashed",
+      expiresAt: pastDate,
+      user: { ...CreatedUser, hashedPassword: "hash", role: "USER" as const },
+    });
+    authRepositoryMock.findUserById.mockResolvedValue({
+      ...CreatedUser,
+      role: "USER" as const,
+      address: [],
+      cart: null,
+      order: [],
+    });
+
+    const result = service.renewRefreshToken("raw-token");
+
+    await expect(result).rejects.toBeInstanceOf(AppError);
+    await expect(result).rejects.toHaveProperty("statusCode", 401);
+    expect(authRepositoryMock.deleteRefreshToken).toHaveBeenCalledWith(1);
+  });
+
+  test("Should fail to renew if refresh token is invalid", async () => {
+    authRepositoryMock.findRefreshToken.mockResolvedValue(null);
+
+    const result = service.renewRefreshToken("invalid-token");
+
+    await expect(result).rejects.toBeInstanceOf(AppError);
+    await expect(result).rejects.toHaveProperty("statusCode", 401);
+  });
 });
