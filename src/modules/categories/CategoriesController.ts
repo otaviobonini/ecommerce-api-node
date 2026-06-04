@@ -42,10 +42,10 @@ export class CategoriesController {
     return res.status(200).json(products);
   }
   async uploadImage(req: Request, res: Response): Promise<Response> {
-    const productId = Number(req.params.productId);
+    const categoryId = Number(req.params.categoryId);
     if (!req.file) throw new AppError(400, "No file provided");
     const image = await this.categoryService.uploadCategoryImage(
-      productId,
+      categoryId,
       req.file.buffer,
       req.file.mimetype,
     );

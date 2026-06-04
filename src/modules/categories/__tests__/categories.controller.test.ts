@@ -153,7 +153,7 @@ describe("CategoriesController", () => {
 
   test("Should upload category image", async () => {
     const req = {
-      params: { productId: "1" },
+      params: { categoryId: "1" },
       file: {
         buffer: Buffer.from("image content"),
         mimetype: "image/jpeg",
