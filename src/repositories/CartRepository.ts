@@ -1,5 +1,5 @@
 import { prisma } from "../database/prisma.js";
-import { ICartRepository } from "../types/ICartRepository.js";
+import { ICartRepository } from "../interfaces/ICartRepository.js";
 
 export class CartRepository implements ICartRepository {
   async createCart(userId: number) {

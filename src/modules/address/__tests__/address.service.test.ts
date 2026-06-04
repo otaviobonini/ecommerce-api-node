@@ -1,21 +1,12 @@
-import { IAddressRepository } from "../../../types/IAddressRepository.js";
 import { AddressService } from "../AddressService.js";
 import { CreateAddressInputFakeData } from "./factories/makeAddress.factory.js";
-
-const mockAddressRepository: jest.Mocked<IAddressRepository> = {
-  createAddress: jest.fn(),
-  getUserAddresses: jest.fn(),
-  getAddressById: jest.fn(),
-  deleteAddress: jest.fn(),
-  setDefaultAddress: jest.fn(),
-  editAddress: jest.fn(),
-};
+import { addressRepositoryMock } from "../../../database/__mocks__/repositories.mock.js";
 
 describe("AddressService", () => {
   let service: AddressService;
 
   beforeEach(() => {
-    service = new AddressService(mockAddressRepository);
+    service = new AddressService(addressRepositoryMock);
     jest.clearAllMocks();
   });
 
@@ -26,12 +17,12 @@ describe("AddressService", () => {
       addressId: 1,
       userId,
     };
-    mockAddressRepository.createAddress.mockResolvedValue(createdAddress);
+    addressRepositoryMock.createAddress.mockResolvedValue(createdAddress);
     const result = await service.createAddress(
       CreateAddressInputFakeData,
       userId,
     );
-    expect(mockAddressRepository.createAddress).toHaveBeenCalledWith(
+    expect(addressRepositoryMock.createAddress).toHaveBeenCalledWith(
       CreateAddressInputFakeData,
       userId,
     );
@@ -43,29 +34,29 @@ describe("AddressService", () => {
       { ...CreateAddressInputFakeData, addressId: 1, userId },
       { ...CreateAddressInputFakeData, addressId: 2, userId },
     ];
-    mockAddressRepository.getUserAddresses.mockResolvedValue(addresses);
+    addressRepositoryMock.getUserAddresses.mockResolvedValue(addresses);
     const result = await service.getUserAddresses(userId);
-    expect(mockAddressRepository.getUserAddresses).toHaveBeenCalledWith(userId);
+    expect(addressRepositoryMock.getUserAddresses).toHaveBeenCalledWith(userId);
     expect(result).toEqual(addresses);
   });
   test("Should delete an address", async () => {
     const userId = 1;
     const addressId = 1;
-    mockAddressRepository.getAddressById.mockResolvedValue({
+    addressRepositoryMock.getAddressById.mockResolvedValue({
       ...CreateAddressInputFakeData,
       addressId,
       userId,
     });
     await service.deleteAddress(addressId, userId);
-    expect(mockAddressRepository.getAddressById).toHaveBeenCalledWith(
+    expect(addressRepositoryMock.getAddressById).toHaveBeenCalledWith(
       addressId,
     );
-    expect(mockAddressRepository.deleteAddress).toHaveBeenCalledWith(addressId);
+    expect(addressRepositoryMock.deleteAddress).toHaveBeenCalledWith(addressId);
   });
   test("Should fail if address not found on delete", async () => {
     const userId = 1;
     const addressId = 1;
-    mockAddressRepository.getAddressById.mockResolvedValue(null);
+    addressRepositoryMock.getAddressById.mockResolvedValue(null);
     const result = service.deleteAddress(addressId, userId);
     await expect(result).rejects.toBeInstanceOf(Error);
     await expect(result).rejects.toHaveProperty("statusCode", 404);
@@ -73,7 +64,7 @@ describe("AddressService", () => {
   test("Should fail if user is unauthorized on delete", async () => {
     const userId = 1;
     const addressId = 1;
-    mockAddressRepository.getAddressById.mockResolvedValue({
+    addressRepositoryMock.getAddressById.mockResolvedValue({
       ...CreateAddressInputFakeData,
       addressId,
       userId: userId + 1, // Different user ID
@@ -85,16 +76,16 @@ describe("AddressService", () => {
   test("Should set default address", async () => {
     const userId = 1;
     const addressId = 1;
-    mockAddressRepository.getAddressById.mockResolvedValue({
+    addressRepositoryMock.getAddressById.mockResolvedValue({
       ...CreateAddressInputFakeData,
       addressId,
       userId,
     });
     await service.setDefaultAddress(addressId, userId);
-    expect(mockAddressRepository.getAddressById).toHaveBeenCalledWith(
+    expect(addressRepositoryMock.getAddressById).toHaveBeenCalledWith(
       addressId,
     );
-    expect(mockAddressRepository.setDefaultAddress).toHaveBeenCalledWith(
+    expect(addressRepositoryMock.setDefaultAddress).toHaveBeenCalledWith(
       addressId,
       userId,
     );
@@ -102,7 +93,7 @@ describe("AddressService", () => {
   test("Should fail if address not found on set default", async () => {
     const userId = 1;
     const addressId = 1;
-    mockAddressRepository.getAddressById.mockResolvedValue(null);
+    addressRepositoryMock.getAddressById.mockResolvedValue(null);
     const result = service.setDefaultAddress(addressId, userId);
     await expect(result).rejects.toBeInstanceOf(Error);
     await expect(result).rejects.toHaveProperty("statusCode", 404);
@@ -110,7 +101,7 @@ describe("AddressService", () => {
   test("Should fail if user is unauthorized on set default", async () => {
     const userId = 1;
     const addressId = 1;
-    mockAddressRepository.getAddressById.mockResolvedValue({
+    addressRepositoryMock.getAddressById.mockResolvedValue({
       ...CreateAddressInputFakeData,
       addressId,
       userId: userId + 1, // Different user ID
@@ -123,22 +114,22 @@ describe("AddressService", () => {
     const userId = 1;
     const addressId = 1;
     const data = { ...CreateAddressInputFakeData, street: "456 Elm St" };
-    mockAddressRepository.getAddressById.mockResolvedValue({
+    addressRepositoryMock.getAddressById.mockResolvedValue({
       ...CreateAddressInputFakeData,
       addressId,
       userId,
     });
-    mockAddressRepository.editAddress.mockResolvedValue({
+    addressRepositoryMock.editAddress.mockResolvedValue({
       ...CreateAddressInputFakeData,
       ...data,
       addressId,
       userId,
     });
     await service.editAddress(addressId, userId, data);
-    expect(mockAddressRepository.getAddressById).toHaveBeenCalledWith(
+    expect(addressRepositoryMock.getAddressById).toHaveBeenCalledWith(
       addressId,
     );
-    expect(mockAddressRepository.editAddress).toHaveBeenCalledWith(
+    expect(addressRepositoryMock.editAddress).toHaveBeenCalledWith(
       addressId,
       data,
     );
@@ -147,7 +138,7 @@ describe("AddressService", () => {
     const userId = 1;
     const addressId = 1;
     const data = { ...CreateAddressInputFakeData, street: "456 Elm St" };
-    mockAddressRepository.getAddressById.mockResolvedValue(null);
+    addressRepositoryMock.getAddressById.mockResolvedValue(null);
     const result = service.editAddress(addressId, userId, data);
     await expect(result).rejects.toBeInstanceOf(Error);
     await expect(result).rejects.toHaveProperty("statusCode", 404);
@@ -156,7 +147,7 @@ describe("AddressService", () => {
     const userId = 1;
     const addressId = 1;
     const data = { ...CreateAddressInputFakeData, street: "456 Elm St" };
-    mockAddressRepository.getAddressById.mockResolvedValue({
+    addressRepositoryMock.getAddressById.mockResolvedValue({
       ...CreateAddressInputFakeData,
       addressId,
       userId: userId + 1, // Different user ID

@@ -32,6 +32,9 @@ export const mockCartItems: (CartItem & { product: Product })[] = [
       productName: "Test Product",
       productPrice: new Prisma.Decimal(100),
       stock: 10,
+      productDescription: null,
+      isFeatured: false,
+      categoryId: null,
     },
   },
   {
@@ -45,6 +48,9 @@ export const mockCartItems: (CartItem & { product: Product })[] = [
       productName: "Premium Product",
       productPrice: new Prisma.Decimal(250.5),
       stock: 5,
+      productDescription: null,
+      isFeatured: false,
+      categoryId: null,
     },
   },
   {
@@ -58,6 +64,9 @@ export const mockCartItems: (CartItem & { product: Product })[] = [
       productName: "Budget Product",
       productPrice: new Prisma.Decimal(49.99),
       stock: 20,
+      productDescription: null,
+      isFeatured: false,
+      categoryId: null,
     },
   },
   {
@@ -71,6 +80,9 @@ export const mockCartItems: (CartItem & { product: Product })[] = [
       productName: "Deluxe Product",
       productPrice: new Prisma.Decimal(500),
       stock: 3,
+      productDescription: null,
+      isFeatured: false,
+      categoryId: null,
     },
   },
 ];

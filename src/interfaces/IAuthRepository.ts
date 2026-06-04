@@ -4,7 +4,7 @@ import {
   CreateUserDTO,
   CreateUserResponse,
   UserWithRelations,
-} from "./auth.types.js";
+} from "../types/auth.types.js";
 
 export interface IAuthRepository {
   createUser(data: CreateUserDTO): Promise<CreateUserResponse>;

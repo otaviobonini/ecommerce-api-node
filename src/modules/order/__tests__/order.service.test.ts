@@ -1,9 +1,10 @@
-import { IPaymentGateway } from "../../../types/IPaymentGateway.js";
 import OrderService from "../OrderService.js";
-import { ICartRepository } from "../../../types/ICartRepository.js";
-
-import { IOrderRepository } from "../../../types/IOrderRepository.js";
-import { IAddressRepository } from "../../../types/IAddressRepository.js";
+import {
+  cartRepositoryMock,
+  addressRepositoryMock,
+  orderRepositoryMock,
+  paymentGatewayMock,
+} from "../../../database/__mocks__/repositories.mock.js";
 import {
   AddressData,
   CartData,
@@ -11,44 +12,6 @@ import {
   mockOrderWithItems,
   mockPaymentResponse,
 } from "./factories/order.factory.js";
-
-export const cartRepositoryMock: jest.Mocked<ICartRepository> = {
-  createCart: jest.fn(),
-  upsertCartItem: jest.fn(),
-  findCartItem: jest.fn(),
-  updateCartItemQuantity: jest.fn(),
-  clearCart: jest.fn(),
-  getCartItems: jest.fn(),
-  deleteCartItem: jest.fn(),
-  findCartByUserId: jest.fn(),
-  findCartById: jest.fn(),
-  findCartItemById: jest.fn(),
-};
-
-const addressRepositoryMock: jest.Mocked<IAddressRepository> = {
-  createAddress: jest.fn(),
-  getUserAddresses: jest.fn(),
-  getAddressById: jest.fn(),
-  deleteAddress: jest.fn(),
-  setDefaultAddress: jest.fn(),
-  editAddress: jest.fn(),
-};
-
-const orderRepositoryMock: jest.Mocked<IOrderRepository> = {
-  createOrder: jest.fn(),
-  restoreStock: jest.fn(),
-  cancelOrder: jest.fn(),
-  updateOrderPaymentLink: jest.fn(),
-  getOrderById: jest.fn(),
-  getAllOrders: jest.fn(),
-  getOrdersByUserId: jest.fn(),
-  editOrderStatus: jest.fn(),
-};
-
-const paymentGatewayMock: jest.Mocked<IPaymentGateway> = {
-  createCheckoutSession: jest.fn(),
-  constructWebhookEvent: jest.fn(),
-};
 
 describe("Order Service Tests", () => {
   let service: OrderService;

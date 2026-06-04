@@ -10,6 +10,11 @@ jobs:
       STRIPE_SECRET_KEY: "sk_test_xxx"
       STRIPE_WEBHOOK_SECRET: "whsec_xxx"
       APP_URL: "http://localhost:3000"
+      REDIS_URL: "redis://localhost:6379"
+      BUCKET_NAME: "bucket-name"
+      BUCKET_REGION: "eu-west-1"
+      AWS_ACCESS_KEY_ID: "your aws access key id"
+      AWS_SECRET_ACCESS_KEY: "your aws secret access key"
 
     steps:
       - name: Checkout code

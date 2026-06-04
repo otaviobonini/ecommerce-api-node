@@ -1,29 +1,10 @@
 import CartService from "../CartService.js";
 import { cartObject, userId } from "./factories/cart.factory.js";
 import { ProductData } from "../../products/__tests__/factories/makeProduct.factory.js";
-import { ICartRepository } from "../../../types/ICartRepository.js";
-import { IProductRepository } from "../../../types/IProductRepository.js";
-
-export const cartRepositoryMock: jest.Mocked<ICartRepository> = {
-  createCart: jest.fn(),
-  upsertCartItem: jest.fn(),
-  findCartItem: jest.fn(),
-  updateCartItemQuantity: jest.fn(),
-  clearCart: jest.fn(),
-  getCartItems: jest.fn(),
-  deleteCartItem: jest.fn(),
-  findCartByUserId: jest.fn(),
-  findCartById: jest.fn(),
-  findCartItemById: jest.fn(),
-};
-
-const productRepositoryMock: jest.Mocked<IProductRepository> = {
-  createProduct: jest.fn(),
-  editProduct: jest.fn(),
-  deleteProduct: jest.fn(),
-  getProducts: jest.fn(),
-  findProductById: jest.fn(),
-};
+import {
+  cartRepositoryMock,
+  productRepositoryMock,
+} from "../../../database/__mocks__/repositories.mock.js";
 
 describe("Cart Service tests", () => {
   let service: CartService;

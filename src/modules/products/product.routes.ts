@@ -9,6 +9,7 @@ import { validateRequest } from "../../middlewares/validate.js";
 import { adminMiddleware } from "../../middlewares/adminMiddleware.js";
 import { authMiddleware } from "../../middlewares/authMiddleware.js";
 import { makeProductController } from "./product.factory.js";
+import upload from "../../middlewares/upload.js";
 
 const Controller = makeProductController();
 
@@ -41,6 +42,27 @@ router.patch(
   validateRequest(ProductIdParamSchema, "params"),
   validateRequest(EditProductSchema, "body"),
   Controller.editProduct.bind(Controller),
+);
+
+router.post(
+  "/product/:productId/images",
+  authMiddleware,
+  adminMiddleware,
+  validateRequest(ProductIdParamSchema, "params"),
+  upload.single("image"),
+  Controller.uploadImage.bind(Controller),
+);
+router.delete(
+  "/product/:productId/images/:imageId",
+  authMiddleware,
+  adminMiddleware,
+  Controller.deleteImage.bind(Controller),
+);
+router.patch(
+  "/product/:productId/images/:imageId/primary",
+  authMiddleware,
+  adminMiddleware,
+  Controller.setPrimaryImage.bind(Controller),
 );
 
 export default router;

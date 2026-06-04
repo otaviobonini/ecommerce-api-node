@@ -6,6 +6,7 @@ import {
   prismaErrorHandler,
 } from "../middlewares/errorHandler.js";
 import authRoutes from "../modules/auth/auth.routes.js";
+import categoriesRoutes from "../modules/categories/categories.routes.js";
 import productRoutes from "../modules/products/product.routes.js";
 import {
   AddressLimiter,
@@ -42,6 +43,7 @@ app.use("/", ProductLimiter, productRoutes);
 app.use("/", OrderLimiter, orderRoutes);
 app.use("/", CartLimiter, cartRoutes);
 app.use("/", AddressLimiter, addressRoutes);
+app.use("/", ProductLimiter, categoriesRoutes);
 
 app.use(prismaErrorHandler);
 app.use(errorHandler);

@@ -1,6 +1,9 @@
 import Stripe from "stripe";
 import { env } from "../schemas/env.schema.js";
-import { IPaymentGateway, WebhookEvent } from "../types/IPaymentGateway.js";
+import {
+  IPaymentGateway,
+  WebhookEvent,
+} from "../interfaces/IPaymentGateway.js";
 
 export class StripeGateway implements IPaymentGateway {
   private stripe: Stripe;

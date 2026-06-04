@@ -1,18 +1,12 @@
 import { describe, expect, jest, beforeEach } from "@jest/globals";
 import AuthService from "../AuthService.js";
-import { IAuthRepository } from "../../../types/IAuthRepository.js";
+import { authRepositoryMock } from "../../../database/__mocks__/repositories.mock.js";
 import {
   CreatedUser,
   CreateUserInputData,
 } from "./factories/makeUser.factory.js";
 import { AppError } from "../../../common/AppError.js";
 
-const authRepositoryMock: jest.Mocked<IAuthRepository> = {
-  createUser: jest.fn(),
-  findUserByEmail: jest.fn(),
-  findUserByEmailWithoutPassword: jest.fn(),
-  findUserById: jest.fn(),
-};
 jest.mock("bcrypt", () => ({
   hash: jest.fn(),
   compare: jest.fn(),

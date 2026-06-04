@@ -1,9 +1,9 @@
-import { IOrderRepository } from "../../types/IOrderRepository.js";
-import { ICartRepository } from "../../types/ICartRepository.js";
-import { IPaymentGateway } from "../../types/IPaymentGateway.js";
+import { IOrderRepository } from "../../interfaces/IOrderRepository.js";
+import { ICartRepository } from "../../interfaces/ICartRepository.js";
+import { IPaymentGateway } from "../../interfaces/IPaymentGateway.js";
 import { AppError } from "../../common/AppError.js";
 import { Status } from "@prisma/client";
-import { IAddressRepository } from "../../types/IAddressRepository.js";
+import { IAddressRepository } from "../../interfaces/IAddressRepository.js";
 
 class OrderService {
   constructor(

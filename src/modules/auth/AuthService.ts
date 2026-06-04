@@ -8,7 +8,7 @@ import {
 } from "../../types/auth.types.js";
 import jwt from "jsonwebtoken";
 import { env } from "../../schemas/env.schema.js";
-import { IAuthRepository } from "../../types/IAuthRepository.js";
+import { IAuthRepository } from "../../interfaces/IAuthRepository.js";
 
 class AuthService {
   constructor(private auth: IAuthRepository) {}
