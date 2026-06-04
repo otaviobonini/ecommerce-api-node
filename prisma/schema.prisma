@@ -22,7 +22,16 @@ model User {
   order Order[]
   cart Cart?
   address Address[]
+  token RefreshToken[]
 
+}
+
+model RefreshToken {
+  id        Int      @id @default(autoincrement())
+  token     String   @unique  
+  expiresAt DateTime           
+  userId    Int
+  user      User     @relation(onDelete: Cascade, fields: [userId], references: [userId])
 }
 
 model Address {

@@ -17,6 +17,7 @@ export type SafeUserWithToken = {
   email: string;
   username: string;
   token: string;
+  refreshToken: string;
 };
 
 export type UserWithRelations = Prisma.UserGetPayload<{
