@@ -4,4 +4,5 @@ export const categoriesServiceMock = {
   findAll: jest.fn(),
   getProductsByCategory: jest.fn(),
   getFeaturedProducts: jest.fn(),
+  uploadCategoryImage: jest.fn(),
 };

@@ -3,6 +3,7 @@ import { CategoriesController } from "../CategoriesController.js";
 import { categoriesServiceMock } from "../__mocks__/categories.service.mock.js";
 import {
   newCategoryData,
+  updatedCategoryData,
   productDataList,
 } from "./factories/categories.factory.js";
 
@@ -18,17 +19,14 @@ describe("CategoriesController", () => {
   };
 
   beforeEach(() => {
-    controller = new CategoriesController(categoriesServiceMock as any);
     jest.clearAllMocks();
+    controller = new CategoriesController(categoriesServiceMock as any);
   });
 
   test("Should create a category", async () => {
     const req = {
-      body: {
-        name: newCategoryData.name,
-      },
+      body: { name: newCategoryData.name },
     } as Request;
-
     const res = mockResponse();
 
     categoriesServiceMock.createCategory.mockResolvedValue(newCategoryData);
@@ -44,11 +42,8 @@ describe("CategoriesController", () => {
 
   test("Should delete a category", async () => {
     const req = {
-      params: {
-        categoryId: "1",
-      },
+      params: { categoryId: "1" },
     } as unknown as Request;
-
     const res = mockResponse();
 
     categoriesServiceMock.deleteCategory.mockResolvedValue(undefined);
@@ -63,7 +58,6 @@ describe("CategoriesController", () => {
   test("Should find all categories", async () => {
     const req = {} as Request;
     const res = mockResponse();
-
     const categories = [newCategoryData];
 
     categoriesServiceMock.findAll.mockResolvedValue(categories);
@@ -77,15 +71,9 @@ describe("CategoriesController", () => {
 
   test("Should get products by category", async () => {
     const req = {
-      params: {
-        categoryId: "1",
-      },
-      query: {
-        offset: "0",
-        limit: "10",
-      },
+      params: { categoryId: "1" },
+      query: { offset: "0", limit: "10" },
     } as unknown as Request;
-
     const res = mockResponse();
 
     categoriesServiceMock.getProductsByCategory.mockResolvedValue(
@@ -105,12 +93,9 @@ describe("CategoriesController", () => {
 
   test("Should get products by category with default pagination", async () => {
     const req = {
-      params: {
-        categoryId: "1",
-      },
+      params: { categoryId: "1" },
       query: {},
     } as unknown as Request;
-
     const res = mockResponse();
 
     categoriesServiceMock.getProductsByCategory.mockResolvedValue(
@@ -130,12 +115,8 @@ describe("CategoriesController", () => {
 
   test("Should get featured products", async () => {
     const req = {
-      query: {
-        offset: "0",
-        limit: "10",
-      },
+      query: { offset: "0", limit: "10" },
     } as unknown as Request;
-
     const res = mockResponse();
 
     categoriesServiceMock.getFeaturedProducts.mockResolvedValue(
@@ -153,10 +134,7 @@ describe("CategoriesController", () => {
   });
 
   test("Should get featured products with default pagination", async () => {
-    const req = {
-      query: {},
-    } as unknown as Request;
-
+    const req = { query: {} } as unknown as Request;
     const res = mockResponse();
 
     categoriesServiceMock.getFeaturedProducts.mockResolvedValue(
@@ -171,5 +149,45 @@ describe("CategoriesController", () => {
     );
     expect(res.status).toHaveBeenCalledWith(200);
     expect(res.json).toHaveBeenCalledWith(productDataList);
+  });
+
+  test("Should upload category image", async () => {
+    const req = {
+      params: { productId: "1" },
+      file: {
+        buffer: Buffer.from("image content"),
+        mimetype: "image/jpeg",
+      },
+    } as unknown as Request;
+    const res = mockResponse();
+
+    categoriesServiceMock.uploadCategoryImage.mockResolvedValue(
+      updatedCategoryData,
+    );
+
+    await controller.uploadImage(req, res);
+
+    expect(categoriesServiceMock.uploadCategoryImage).toHaveBeenCalledWith(
+      1,
+      req.file!.buffer,
+      req.file!.mimetype,
+    );
+    expect(res.status).toHaveBeenCalledWith(201);
+    expect(res.json).toHaveBeenCalledWith(updatedCategoryData);
+  });
+
+  test("Should throw if no file is provided on upload", async () => {
+    const req = {
+      params: { productId: "1" },
+      file: undefined,
+    } as unknown as Request;
+    const res = mockResponse();
+
+    await expect(controller.uploadImage(req, res)).rejects.toMatchObject({
+      statusCode: 400,
+      message: "No file provided",
+    });
+
+    expect(categoriesServiceMock.uploadCategoryImage).not.toHaveBeenCalled();
   });
 });

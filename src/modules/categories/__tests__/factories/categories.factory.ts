@@ -2,8 +2,15 @@ import { Category, Product } from "@prisma/client";
 import { Decimal } from "@prisma/client/runtime/library";
 
 export const newCategoryData: Category = {
+  categoryId: 1,
   name: "New Category",
-  categoryId: 0,
+  categoryImage: null,
+};
+
+export const updatedCategoryData: Category = {
+  categoryId: 1,
+  name: "New Category",
+  categoryImage: "https://example.com/categories/1/image",
 };
 
 export const productDataList: Product[] = [
