@@ -1,3 +1,4 @@
+import { AppError } from "../../common/AppError.js";
 import { CategoriesService } from "./CategoriesService.js";
 import { Request, Response } from "express";
 
@@ -39,5 +40,15 @@ export class CategoriesController {
       Number(limit) || 20,
     );
     return res.status(200).json(products);
+  }
+  async uploadImage(req: Request, res: Response): Promise<Response> {
+    const productId = Number(req.params.productId);
+    if (!req.file) throw new AppError(400, "No file provided");
+    const image = await this.categoryService.uploadCategoryImage(
+      productId,
+      req.file.buffer,
+      req.file.mimetype,
+    );
+    return res.status(201).json(image);
   }
 }

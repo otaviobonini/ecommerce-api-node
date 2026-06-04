@@ -81,4 +81,5 @@ export const categoriesRepositoryMock: jest.Mocked<ICategoryRepository> = {
   findById: jest.fn(),
   getProductsByCategory: jest.fn(),
   getFeaturedProducts: jest.fn(),
+  editCategory: jest.fn(),
 };

@@ -12,4 +12,9 @@ export interface ICategoryRepository {
     limit: number,
   ): Promise<Product[]>;
   getFeaturedProducts(offset: number, limit: number): Promise<Product[]>;
+
+  editCategory(
+    categoryId: number,
+    data: { name?: string; categoryImage?: string },
+  ): Promise<Category>;
 }

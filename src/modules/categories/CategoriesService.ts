@@ -1,8 +1,12 @@
 import { ICategoryRepository } from "../../interfaces/ICategoriesRepository.js";
 import { AppError } from "../../common/AppError.js";
+import { IS3Gateway } from "../../interfaces/IS3Gateway.js";
 
 export class CategoriesService {
-  constructor(private categoryRepository: ICategoryRepository) {}
+  constructor(
+    private categoryRepository: ICategoryRepository,
+    private upload: IS3Gateway,
+  ) {}
 
   async createCategory(name: string) {
     const exists = await this.categoryRepository.findByName(name);
@@ -18,6 +22,23 @@ export class CategoriesService {
 
   async findAll() {
     return this.categoryRepository.findAll();
+  }
+
+  async uploadCategoryImage(
+    categoryId: number,
+    buffer: Buffer,
+    mimetype: string,
+  ) {
+    const category = await this.categoryRepository.findById(categoryId);
+    if (!category) throw new AppError(404, "Category not found");
+    const imageUrl = await this.upload.uploadFile(
+      buffer,
+      `categories/${categoryId}/image`,
+      mimetype,
+    );
+    return this.categoryRepository.editCategory(categoryId, {
+      categoryImage: imageUrl,
+    });
   }
 
   async getProductsByCategory(
