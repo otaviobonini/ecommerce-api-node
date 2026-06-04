@@ -25,6 +25,10 @@ export const authRepositoryMock: jest.Mocked<IAuthRepository> = {
   findUserByEmail: jest.fn(),
   findUserByEmailWithoutPassword: jest.fn(),
   findUserById: jest.fn(),
+  createRefreshToken: jest.fn(),
+  findRefreshToken: jest.fn(),
+  deleteRefreshToken: jest.fn(),
+  deleteRefreshTokensByUserId: jest.fn(),
 };
 
 export const addressRepositoryMock: jest.Mocked<IAddressRepository> = {

@@ -1,6 +1,7 @@
 import { AppError } from "../../common/AppError.js";
 import { CreateUserInput, LoginUserInput } from "../../schemas/auth.schema.js";
 import bcrypt from "bcrypt";
+import crypto from "crypto";
 import {
   CreateUserDTO,
   CreateUserResponse,
@@ -43,15 +44,81 @@ class AuthService {
       { id: userExists.userId, role: userExists.role },
       env.JWT_SECRET,
       {
-        expiresIn: "7d",
+        expiresIn: "15min",
       },
     );
+
+    const refreshToken = await this.generateRefreshToken(userExists.userId);
+
     return {
       id: userExists.userId,
       email: userExists.email,
       username: userExists.username,
       token,
+      refreshToken,
     };
+  }
+
+  private async generateRefreshToken(userId: number): Promise<string> {
+    const rawRefreshToken = crypto.randomUUID();
+    const hashedRefreshToken = crypto
+      .createHash("sha256")
+      .update(rawRefreshToken)
+      .digest("hex");
+    // We need to hash the refresh token before storing in the database in case the database is
+    // compromised. This way the attacker won't be able to use the refresh tokens.
+    const expiresAt = new Date();
+    expiresAt.setDate(expiresAt.getDate() + 7); // Refresh token valid for 7 days
+
+    // Now we insert the data in the database
+    await this.auth.createRefreshToken({
+      userId,
+      token: hashedRefreshToken,
+      expiresAt,
+    });
+    // We return the raw refresh token to the user
+    return rawRefreshToken;
+  }
+  async renewRefreshToken(oldToken: string): Promise<{
+    token: string;
+    refreshToken: string;
+  }> {
+    const hashedRefreshToken = crypto
+      .createHash("sha256")
+      .update(oldToken)
+      .digest("hex");
+    const existingToken = await this.auth.findRefreshToken(hashedRefreshToken);
+    if (!existingToken) {
+      throw new AppError(401, "Invalid refresh token");
+    }
+    const user = await this.auth.findUserById(existingToken.userId);
+
+    if (!user) {
+      throw new AppError(401, "User not found");
+    }
+    if (existingToken.expiresAt < new Date()) {
+      await this.auth.deleteRefreshToken(existingToken.id);
+      throw new AppError(401, "Refresh token expired");
+    }
+    const newToken = await this.generateRefreshToken(existingToken.userId);
+
+    await this.auth.deleteRefreshToken(existingToken.id);
+
+    const token = jwt.sign(
+      { id: existingToken.userId, role: user.role },
+      env.JWT_SECRET,
+      {
+        expiresIn: "15min",
+      },
+    );
+    return {
+      token: token,
+      refreshToken: newToken,
+    };
+  }
+
+  async logout(userId: number): Promise<void> {
+    await this.auth.deleteRefreshTokensByUserId(userId);
   }
 }
 

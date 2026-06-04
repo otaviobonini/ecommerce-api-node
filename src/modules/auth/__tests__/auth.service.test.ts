@@ -68,6 +68,7 @@ describe("Auth Service tests", () => {
       email: CreatedUser.email,
       username: CreatedUser.username,
       token: "token",
+      refreshToken: expect.any(String),
     });
   });
   test("Should fail if password incorrect", async () => {

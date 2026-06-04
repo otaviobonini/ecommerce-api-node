@@ -45,4 +45,28 @@ export class AuthRepository implements IAuthRepository {
       },
     });
   }
+
+  //Refresh token methods
+  async createRefreshToken(data: {
+    userId: number;
+    token: string;
+    expiresAt: Date;
+  }) {
+    return prisma.refreshToken.create({ data });
+  }
+
+  async findRefreshToken(hashedToken: string) {
+    return prisma.refreshToken.findUnique({
+      where: { token: hashedToken },
+      include: { user: true },
+    });
+  }
+
+  async deleteRefreshToken(id: number) {
+    return prisma.refreshToken.delete({ where: { id } });
+  }
+
+  async deleteRefreshTokensByUserId(userId: number) {
+    return prisma.refreshToken.deleteMany({ where: { userId } });
+  }
 }
