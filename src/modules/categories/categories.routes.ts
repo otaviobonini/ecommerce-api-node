@@ -8,6 +8,7 @@ import {
   CategoryIdParamSchema,
   GetProductsSchema,
 } from "../../schemas/category.schema.js";
+import upload from "../../middlewares/upload.js";
 
 const router = Router();
 const controller = makeCategoriesController();
@@ -43,6 +44,15 @@ router.delete(
   adminMiddleware,
   validateRequest(CategoryIdParamSchema, "params"),
   controller.deleteCategory.bind(controller),
+);
+
+router.post(
+  "/categories/:categoryId/image",
+  authMiddleware,
+  adminMiddleware,
+  upload.single("image"),
+  validateRequest(CategoryIdParamSchema, "params"),
+  controller.uploadImage.bind(controller),
 );
 
 export default router;

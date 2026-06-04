@@ -53,4 +53,14 @@ export class CategoriesRepository implements ICategoryRepository {
       include: { images: true },
     });
   }
+
+  async editCategory(
+    categoryId: number,
+    data: { name?: string; categoryImage?: string },
+  ): Promise<Category> {
+    return prisma.category.update({
+      where: { categoryId },
+      data,
+    });
+  }
 }

@@ -100,6 +100,7 @@ model Order {
 model Category {
   categoryId   Int       @id @default(autoincrement())
   name         String    @unique
+  categoryImage String?
   products     Product[]
 }
 
