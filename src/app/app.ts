@@ -3,7 +3,9 @@ import helmet from "helmet";
 import cors from "cors";
 import {
   errorHandler,
+  multerErrorHandler,
   prismaErrorHandler,
+  stripeErrorHandler,
 } from "../middlewares/errorHandler.js";
 import authRoutes from "../modules/auth/auth.routes.js";
 import categoriesRoutes from "../modules/categories/categories.routes.js";
@@ -45,6 +47,8 @@ app.use("/", CartLimiter, cartRoutes);
 app.use("/", AddressLimiter, addressRoutes);
 app.use("/", ProductLimiter, categoriesRoutes);
 
+app.use(multerErrorHandler);
+app.use(stripeErrorHandler);
 app.use(prismaErrorHandler);
 app.use(errorHandler);
 export default app;
