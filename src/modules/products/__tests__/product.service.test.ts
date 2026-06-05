@@ -93,4 +93,137 @@ describe("Product service tests", () => {
     expect(redis.set).not.toHaveBeenCalled();
     expect(result).toEqual(ProductListJson);
   });
+  test("Should upload product image", async () => {
+    const buffer = Buffer.from("test image");
+
+    productRepositoryMock.findProductById.mockResolvedValue(ProductData);
+    S3GatewayMock.uploadFile.mockResolvedValue(
+      "https://bucket.com/products/1/image.jpg",
+    );
+    ImageRepositoryMock.uploadImage.mockResolvedValue({
+      imageId: 1,
+      productId: 1,
+      url: "https://bucket.com/products/1/image.jpg",
+      isPrimary: false,
+    } as any);
+
+    const result = await service.uploadProductImage(1, buffer, "image/jpeg");
+
+    expect(productRepositoryMock.findProductById).toHaveBeenCalledWith(1);
+    expect(S3GatewayMock.uploadFile).toHaveBeenCalledWith(
+      buffer,
+      expect.stringContaining("products/1/"),
+      "image/jpeg",
+    );
+    expect(ImageRepositoryMock.uploadImage).toHaveBeenCalledWith(
+      1,
+      "https://bucket.com/products/1/image.jpg",
+    );
+    expect(result).toEqual({
+      imageId: 1,
+      productId: 1,
+      url: "https://bucket.com/products/1/image.jpg",
+      isPrimary: false,
+    });
+  });
+
+  test("Should throw AppError when product does not exist while uploading image", async () => {
+    const buffer = Buffer.from("test image");
+
+    productRepositoryMock.findProductById.mockResolvedValue(null as any);
+
+    await expect(
+      service.uploadProductImage(1, buffer, "image/jpeg"),
+    ).rejects.toThrow("Product not found");
+
+    expect(S3GatewayMock.uploadFile).not.toHaveBeenCalled();
+    expect(ImageRepositoryMock.uploadImage).not.toHaveBeenCalled();
+  });
+
+  test("Should delete product image", async () => {
+    ImageRepositoryMock.findImageById.mockResolvedValue({
+      imageId: 1,
+      productId: 1,
+      url: "https://bucket.com/products/1/image.jpg",
+      isPrimary: false,
+    } as any);
+
+    ImageRepositoryMock.deleteImage.mockResolvedValue(undefined as any);
+
+    await service.deleteProductImage(1, 1);
+
+    expect(ImageRepositoryMock.findImageById).toHaveBeenCalledWith(1);
+    expect(S3GatewayMock.deleteFile).toHaveBeenCalledWith(
+      "products/1/image.jpg",
+    );
+    expect(ImageRepositoryMock.deleteImage).toHaveBeenCalledWith(1);
+  });
+
+  test("Should throw AppError when deleting image that does not exist", async () => {
+    ImageRepositoryMock.findImageById.mockResolvedValue(null as any);
+
+    await expect(service.deleteProductImage(1, 1)).rejects.toThrow(
+      "Image not found",
+    );
+
+    expect(S3GatewayMock.deleteFile).not.toHaveBeenCalled();
+    expect(ImageRepositoryMock.deleteImage).not.toHaveBeenCalled();
+  });
+
+  test("Should throw AppError when deleting image from another product", async () => {
+    ImageRepositoryMock.findImageById.mockResolvedValue({
+      imageId: 1,
+      productId: 999,
+      url: "https://bucket.com/products/999/image.jpg",
+      isPrimary: false,
+    } as any);
+
+    await expect(service.deleteProductImage(1, 1)).rejects.toThrow(
+      "Image does not belong to this product",
+    );
+
+    expect(S3GatewayMock.deleteFile).not.toHaveBeenCalled();
+    expect(ImageRepositoryMock.deleteImage).not.toHaveBeenCalled();
+  });
+
+  test("Should set primary image", async () => {
+    ImageRepositoryMock.findImageById.mockResolvedValue({
+      imageId: 1,
+      productId: 1,
+      url: "https://bucket.com/products/1/image.jpg",
+      isPrimary: false,
+    } as any);
+
+    ImageRepositoryMock.setPrimaryImage.mockResolvedValue(undefined as any);
+
+    await service.setPrimaryImage(1, 1);
+
+    expect(ImageRepositoryMock.findImageById).toHaveBeenCalledWith(1);
+    expect(ImageRepositoryMock.setPrimaryImage).toHaveBeenCalledWith(1, 1);
+  });
+
+  test("Should throw AppError when setting primary image that does not exist", async () => {
+    ImageRepositoryMock.findImageById.mockResolvedValue(null as any);
+
+    await expect(service.setPrimaryImage(1, 1)).rejects.toThrow(
+      "Image not found",
+    );
+
+    expect(ImageRepositoryMock.setPrimaryImage).not.toHaveBeenCalled();
+  });
+
+  test("Should throw AppError when setting primary image from another product", async () => {
+    ImageRepositoryMock.findImageById.mockResolvedValue({
+      imageId: 1,
+      productId: 999,
+      url: "https://bucket.com/products/999/image.jpg",
+      isPrimary: false,
+    } as any);
+
+    await expect(service.setPrimaryImage(1, 1)).rejects.toThrow(
+      "Image does not belong to this product",
+    );
+
+    expect(ImageRepositoryMock.setPrimaryImage).not.toHaveBeenCalled();
+  });
 });

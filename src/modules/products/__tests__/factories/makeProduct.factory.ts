@@ -20,14 +20,15 @@ export const FindUserByIdData = {
   address: [],
 };
 
-export const ProductData: Product = {
+export const ProductData = {
   productId: 1,
-  productName: "Produto Teste",
+  productName: "Product Test",
   productPrice: new Decimal(99.9),
   stock: 10,
   productDescription: null,
-  isFeatured: false,
   categoryId: null,
+  isFeatured: false,
+  images: [],
 };
 
 export const ProductList: ProductWithImages[] = [
