@@ -17,6 +17,21 @@ class ProductService {
     private storage: IS3Gateway,
   ) {}
 
+  async getProduct(productId: number) {
+    const productFromCache = await redis.get(`products:${productId}`);
+    if (productFromCache) {
+      return JSON.parse(productFromCache);
+    }
+    const product = await this.product.getProduct(productId);
+    if (!product) throw new AppError(404, "Product not found");
+    await redis.set(
+      `products:${productId}`,
+      JSON.stringify(product),
+      "EX",
+      60 * 10,
+    );
+    return product;
+  }
   async createProduct(data: CreateProductInput) {
     const product = await this.product.createProduct(data);
     await invalidateCache("products:*");
@@ -39,13 +54,14 @@ class ProductService {
       return JSON.parse(productsFromCache);
     }
     const products = await this.product.getProducts(limit, offset);
+    const result = { products, limit, offset };
     await redis.set(
       `products:${limit}:${offset}`,
-      JSON.stringify(products),
+      JSON.stringify(result),
       "EX",
       60 * 1, // Cache for 1 minute
     );
-    return products;
+    return result;
   }
 
   // This methods are going to handle images logic with s3

@@ -4,8 +4,16 @@ import {
   EditProductInput,
 } from "../schemas/product.schema.js";
 import { IProductRepository } from "../interfaces/IProductRepository.js";
+import { ProductWithImages } from "../types/product.types.js";
 
 export class ProductRepository implements IProductRepository {
+  async getProduct(productId: number): Promise<ProductWithImages> {
+    const product = await prisma.product.findUniqueOrThrow({
+      where: { productId },
+      include: { images: true },
+    });
+    return product;
+  }
   async createProduct(data: CreateProductInput) {
     const product = await prisma.product.create({
       data: data,

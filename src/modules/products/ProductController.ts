@@ -22,10 +22,16 @@ class ProductController {
     return res.status(200).json(product);
   }
   async deleteProduct(req: Request, res: Response): Promise<Response> {
-    let productId = Number(req.params.productId);
+    const productId = Number(req.params.productId);
     await this.service.deleteProduct(productId);
     return res.status(204).send();
   }
+  async getProduct(req: Request, res: Response): Promise<Response> {
+    const productId = Number(req.params.productId);
+    const product = await this.service.getProduct(productId);
+    return res.status(200).json(product);
+  }
+
   async listProducts(req: Request, res: Response): Promise<Response> {
     const { limit, offset } = req.query as unknown as GetProductsQueryInput;
     const products = await this.service.listProducts(limit, offset);
