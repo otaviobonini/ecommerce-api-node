@@ -59,6 +59,7 @@ export const productRepositoryMock: jest.Mocked<IProductRepository> = {
   editProduct: jest.fn(),
   deleteProduct: jest.fn(),
   getProducts: jest.fn(),
+  getProduct: jest.fn(),
   findProductById: jest.fn(),
 };
 

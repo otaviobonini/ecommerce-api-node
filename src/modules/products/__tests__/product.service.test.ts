@@ -37,6 +37,7 @@ const productRepositoryMock: jest.Mocked<IProductRepository> = {
   editProduct: jest.fn(),
   deleteProduct: jest.fn(),
   getProducts: jest.fn(),
+  getProduct: jest.fn(),
   findProductById: jest.fn(),
 };
 
@@ -54,6 +55,7 @@ describe("Product service tests", () => {
       S3GatewayMock,
     );
   });
+
   test("Should create a new product", async () => {
     productRepositoryMock.createProduct.mockResolvedValue(ProductData);
     const result = await service.createProduct(CreateProductInputData);
@@ -78,10 +80,23 @@ describe("Product service tests", () => {
     expect(result).toBe(ProductData);
   });
   test("Should return products without cache", async () => {
-    productRepositoryMock.getProducts.mockResolvedValue(ProductList);
+    productRepositoryMock.getProducts.mockResolvedValue({
+      products: ProductList,
+      total: ProductList.length,
+    });
+
     const result = await service.listProducts();
-    expect(productRepositoryMock.getProducts).toHaveBeenCalled();
-    expect(result).toBe(ProductList);
+
+    expect(productRepositoryMock.getProducts).toHaveBeenCalledWith(10, 0);
+
+    expect(result).toEqual({
+      limit: 10,
+      offset: 0,
+      products: ProductList,
+      total: ProductList.length,
+      hasPrevious: false,
+      hasNext: false,
+    });
   });
   test("Should return products with cache", async () => {
     jest.mocked(redis.get).mockResolvedValue(JSON.stringify(ProductList));

@@ -12,8 +12,15 @@ export interface IProductRepository {
   editProduct(data: EditProductInput, productId: number): Promise<Product>;
 
   deleteProduct(productId: number): Promise<Product>;
+  getProduct(productId: number): Promise<ProductWithImages>;
 
-  getProducts(limit: number, offset: number): Promise<ProductWithImages[]>;
+  getProducts(
+    limit: number,
+    offset: number,
+  ): Promise<{
+    products: ProductWithImages[];
+    total: number;
+  }>;
 
   findProductById(productId: number): Promise<ProductWithImages | null>;
 }

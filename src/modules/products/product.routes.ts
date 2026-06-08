@@ -16,7 +16,13 @@ const Controller = makeProductController();
 const router = Router();
 
 router.get(
-  "/product",
+  "/product/:productId",
+  validateRequest(ProductIdParamSchema, "params"),
+  Controller.getProduct.bind(Controller),
+);
+
+router.get(
+  "/products",
   validateRequest(GetProductsQuerySchema, "query"),
   Controller.listProducts.bind(Controller),
 );

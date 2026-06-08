@@ -17,6 +17,21 @@ class ProductService {
     private storage: IS3Gateway,
   ) {}
 
+  async getProduct(productId: number) {
+    const productFromCache = await redis.get(`products:${productId}`);
+    if (productFromCache) {
+      return JSON.parse(productFromCache);
+    }
+    const product = await this.product.getProduct(productId);
+    if (!product) throw new AppError(404, "Product not found");
+    await redis.set(
+      `products:${productId}`,
+      JSON.stringify(product),
+      "EX",
+      60 * 10,
+    );
+    return product;
+  }
   async createProduct(data: CreateProductInput) {
     const product = await this.product.createProduct(data);
     await invalidateCache("products:*");
@@ -38,14 +53,17 @@ class ProductService {
     if (productsFromCache) {
       return JSON.parse(productsFromCache);
     }
-    const products = await this.product.getProducts(limit, offset);
+    const { products, total } = await this.product.getProducts(limit, offset);
+    const hasNext = limit + offset < total;
+    const hasPrevious = offset > 0;
+    const result = { products, limit, offset, total, hasPrevious, hasNext };
     await redis.set(
       `products:${limit}:${offset}`,
-      JSON.stringify(products),
+      JSON.stringify(result),
       "EX",
       60 * 1, // Cache for 1 minute
     );
-    return products;
+    return result;
   }
 
   // This methods are going to handle images logic with s3
@@ -59,6 +77,7 @@ class ProductService {
 
     const key = `products/${productId}/${randomUUID()}`;
     const url = await this.storage.uploadFile(buffer, key, mimetype);
+    await invalidateCache("products:*");
     return this.image.uploadImage(productId, url);
   }
 
@@ -70,6 +89,7 @@ class ProductService {
 
     const key = new URL(image.url).pathname.slice(1);
     await this.storage.deleteFile(key);
+    await invalidateCache("products:*");
     return this.image.deleteImage(imageId);
   }
 
@@ -78,6 +98,7 @@ class ProductService {
     if (!image) throw new AppError(404, "Image not found");
     if (image.productId !== productId)
       throw new AppError(403, "Image does not belong to this product");
+    await invalidateCache("products:*");
     return this.image.setPrimaryImage(productId, imageId);
   }
 }
