@@ -32,12 +32,15 @@ export class ProductRepository implements IProductRepository {
     return product;
   }
   async getProducts(limit = 10, offset = 0) {
-    const products = await prisma.product.findMany({
-      take: limit,
-      skip: offset,
-      include: { images: true },
-    });
-    return products;
+    const [products, total] = await prisma.$transaction([
+      prisma.product.findMany({
+        take: limit,
+        skip: offset,
+        include: { images: true },
+      }),
+      prisma.product.count(),
+    ]);
+    return { products, total };
   }
   async findProductById(productId: number) {
     return await prisma.product.findUnique({

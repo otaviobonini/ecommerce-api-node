@@ -53,8 +53,10 @@ class ProductService {
     if (productsFromCache) {
       return JSON.parse(productsFromCache);
     }
-    const products = await this.product.getProducts(limit, offset);
-    const result = { products, limit, offset };
+    const { products, total } = await this.product.getProducts(limit, offset);
+    const hasNext = limit + offset < total;
+    const hasPrevious = offset > 0;
+    const result = { products, limit, offset, total, hasPrevious, hasNext };
     await redis.set(
       `products:${limit}:${offset}`,
       JSON.stringify(result),
@@ -75,6 +77,7 @@ class ProductService {
 
     const key = `products/${productId}/${randomUUID()}`;
     const url = await this.storage.uploadFile(buffer, key, mimetype);
+    await invalidateCache("products:*");
     return this.image.uploadImage(productId, url);
   }
 
@@ -86,6 +89,7 @@ class ProductService {
 
     const key = new URL(image.url).pathname.slice(1);
     await this.storage.deleteFile(key);
+    await invalidateCache("products:*");
     return this.image.deleteImage(imageId);
   }
 
@@ -94,6 +98,7 @@ class ProductService {
     if (!image) throw new AppError(404, "Image not found");
     if (image.productId !== productId)
       throw new AppError(403, "Image does not belong to this product");
+    await invalidateCache("products:*");
     return this.image.setPrimaryImage(productId, imageId);
   }
 }
