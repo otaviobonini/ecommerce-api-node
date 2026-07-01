@@ -18,7 +18,7 @@ export class StripeGateway implements IPaymentGateway {
     items: Array<{ name: string; quantity: number; unitPrice: number }>;
   }): Promise<{ paymentLink: string; sessionId: string }> {
     const session = await this.stripe.checkout.sessions.create({
-      payment_method_types: ["card", "pix", "boleto"],
+      payment_method_types: ["card", "boleto"],
       mode: "payment",
       line_items: params.items.map((item) => ({
         quantity: item.quantity,
@@ -29,8 +29,8 @@ export class StripeGateway implements IPaymentGateway {
         },
       })),
       metadata: { orderId: String(params.orderId) },
-      success_url: `${env.APP_URL}/orders/${params.orderId}?status=success`,
-      cancel_url: `${env.APP_URL}/orders/${params.orderId}?status=cancelled`,
+      success_url: `${env.CLIENT_URL}/orders/${params.orderId}?status=success`,
+      cancel_url: `${env.CLIENT_URL}/orders/${params.orderId}?status=cancelled`,
     });
 
     return {
