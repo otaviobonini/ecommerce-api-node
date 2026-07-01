@@ -3,6 +3,7 @@ import { authDocs } from "../docs/auth.docs.js";
 import { cartDocs } from "../docs/cart.docs.js";
 import { orderDocs } from "../docs/order.docs.js";
 import { productDocs } from "../docs/products.docs.js";
+import { categoriesDocs } from "../docs/categories.docs.js";
 import { env } from "../schemas/env.schema.js";
 
 export const swaggerSpec = {
@@ -27,5 +28,6 @@ export const swaggerSpec = {
     ...cartDocs,
     ...addressDocs,
     ...orderDocs,
+    ...categoriesDocs,
   },
 };

@@ -2,6 +2,9 @@
   "name": "ecommerce",
   "version": "1.0.0",
   "description": "",
+  "prisma": {
+    "seed": "tsx prisma/seed.ts"
+  },
   "scripts": {
     "test": "jest",
     "dev": "tsx watch src/app/server.ts",

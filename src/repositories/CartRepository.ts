@@ -55,7 +55,11 @@ export class CartRepository implements ICartRepository {
     return prisma.cartItem.findMany({
       where: { cartId },
       include: {
-        product: true,
+        product: {
+          include: {
+            images: true,
+          },
+        },
       },
     });
   }
