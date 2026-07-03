@@ -9,9 +9,48 @@ export async function getUserDetails(req: Request, res: Response) {
     select: {
       userId: true,
       email: true,
+      role: true,
       username: true,
       address: true,
-      order: true,
+      order: {
+        select: {
+          orderId: true,
+          status: true,
+          total: true,
+          createdAt: true,
+          address: {
+            select: {
+              addressId: true,
+              street: true,
+              city: true,
+              state: true,
+              zipCode: true,
+            },
+          },
+          orderItems: {
+            select: {
+              orderItemId: true,
+              quantity: true,
+              priceAtTime: true,
+              product: {
+                select: {
+                  productId: true,
+                  productName: true,
+                  productPrice: true,
+                  images: {
+                    where: {
+                      isPrimary: true,
+                    },
+                    select: {
+                      url: true,
+                    },
+                  },
+                },
+              },
+            },
+          },
+        },
+      },
     },
   });
   if (!user) {
