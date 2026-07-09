@@ -38,6 +38,14 @@ router.post(
   controller.createCategory.bind(controller),
 );
 
+router.put(
+  "/categories/:categoryId",
+  authMiddleware,
+  adminMiddleware,
+  validateRequest(CategoryIdParamSchema, "params"),
+  controller.editCategory.bind(controller),
+);
+
 router.delete(
   "/categories/:categoryId",
   authMiddleware,

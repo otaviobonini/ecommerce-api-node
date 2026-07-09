@@ -94,6 +94,12 @@ class OrderService {
   async getAllOrders(offset = 0, limit = 20) {
     return this.order.getAllOrders(offset, limit);
   }
+
+  async updateOrderStatus(orderId: number, status: Status) {
+    const order = await this.order.getOrderById(orderId);
+    if (!order) throw new AppError(404, "Order not found");
+    return this.order.editOrderStatus(orderId, status);
+  }
 }
 
 export default OrderService;

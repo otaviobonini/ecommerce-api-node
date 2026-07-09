@@ -24,6 +24,15 @@ export class CategoriesService {
     return this.categoryRepository.findAll();
   }
 
+  async editCategory(
+    categoryId: number,
+    data: { name?: string; categoryImage?: string },
+  ) {
+    const category = await this.categoryRepository.findById(categoryId);
+    if (!category) throw new AppError(404, "Category not found");
+    return this.categoryRepository.editCategory(categoryId, data);
+  }
+
   async uploadCategoryImage(
     categoryId: number,
     buffer: Buffer,

@@ -46,5 +46,11 @@ class OrderController {
     );
     return res.status(200).json(orders);
   }
+  async updateOrderStatus(req: Request, res: Response) {
+    const orderId = Number(req.params.orderId);
+    const { status } = req.body;
+    const order = await this.service.updateOrderStatus(orderId, status);
+    return res.status(200).json(order);
+  }
 }
 export default OrderController;
