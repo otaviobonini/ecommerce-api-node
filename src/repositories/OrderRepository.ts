@@ -1,6 +1,7 @@
 import { Status } from "@prisma/client";
 import { prisma } from "../database/prisma.js";
 import {
+  AdminOrder,
   IOrderRepository,
   OrderWithItems,
 } from "../interfaces/IOrderRepository.js";
@@ -110,12 +111,77 @@ export class OrderRepository implements IOrderRepository {
     });
   }
 
-  async getAllOrders(offset = 0, limit = 20): Promise<OrderWithItems[]> {
+  async getAllOrders(offset = 0, limit = 20): Promise<AdminOrder[]> {
     return prisma.order.findMany({
-      include: { orderItems: true },
       skip: offset,
       take: limit,
-      orderBy: { createdAt: "desc" },
+      orderBy: {
+        createdAt: "desc",
+      },
+      select: {
+        orderId: true,
+        status: true,
+        total: true,
+        paymentLink: true,
+        createdAt: true,
+        updatedAt: true,
+
+        user: {
+          select: {
+            userId: true,
+            username: true,
+            email: true,
+          },
+        },
+
+        address: {
+          select: {
+            addressId: true,
+            street: true,
+            city: true,
+            state: true,
+            zipCode: true,
+            isDefault: true,
+          },
+        },
+
+        orderItems: {
+          select: {
+            orderItemId: true,
+            orderId: true,
+            productId: true,
+            quantity: true,
+            priceAtTime: true,
+
+            product: {
+              select: {
+                productId: true,
+                productName: true,
+                productPrice: true,
+                productDescription: true,
+                stock: true,
+                isFeatured: true,
+
+                category: {
+                  select: {
+                    categoryId: true,
+                    name: true,
+                    categoryImage: true,
+                  },
+                },
+
+                images: {
+                  select: {
+                    imageId: true,
+                    url: true,
+                    isPrimary: true,
+                  },
+                },
+              },
+            },
+          },
+        },
+      },
     });
   }
   async cancelOrder(orderId: number): Promise<void> {

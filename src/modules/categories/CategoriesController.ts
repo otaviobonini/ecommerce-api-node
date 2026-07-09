@@ -41,6 +41,15 @@ export class CategoriesController {
     );
     return res.status(200).json(products);
   }
+  async editCategory(req: Request, res: Response): Promise<Response> {
+    const categoryId = Number(req.params.categoryId);
+    const { name, categoryImage } = req.body;
+    const category = await this.categoryService.editCategory(categoryId, {
+      name,
+      categoryImage,
+    });
+    return res.status(200).json(category);
+  }
   async uploadImage(req: Request, res: Response): Promise<Response> {
     const categoryId = Number(req.params.categoryId);
     if (!req.file) throw new AppError(400, "No file provided");
