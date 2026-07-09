@@ -54,4 +54,12 @@ router.get(
   controller.getAllOrders.bind(controller),
 );
 
+router.put(
+  "/orders/:orderId/status",
+  authMiddleware,
+  adminMiddleware,
+  validateRequest(OrderIdParamSchema, "params"),
+  controller.updateOrderStatus.bind(controller),
+);
+
 export default router;
