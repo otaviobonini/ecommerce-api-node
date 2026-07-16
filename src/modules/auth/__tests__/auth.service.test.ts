@@ -70,6 +70,9 @@ describe("Auth Service tests", () => {
       token: "token",
       refreshToken: expect.any(String),
     });
+    expect(authRepositoryMock.createRefreshToken).toHaveBeenCalledWith(
+      expect.objectContaining({ userId: CreatedUser.userId }),
+    );
   });
   test("Should fail if password incorrect", async () => {
     authRepositoryMock.findUserByEmail.mockResolvedValue({
