@@ -16,6 +16,7 @@ const envSchema = z.object({
   BUCKET_REGION: z.string().nonempty(),
   AWS_ACCESS_KEY_ID: z.string().nonempty(),
   AWS_SECRET_ACCESS_KEY: z.string().nonempty(),
+  CDN_URl: z.string().nonempty(),
 });
 
 export const env = envSchema.parse(process.env);

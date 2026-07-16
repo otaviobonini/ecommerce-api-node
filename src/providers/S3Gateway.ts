@@ -32,7 +32,7 @@ export class S3Gateway implements IS3Gateway {
         ContentType: mimetype,
       }),
     );
-    return `https://${env.BUCKET_NAME}.s3.${env.BUCKET_REGION}.amazonaws.com/${key}?v=${Date.now()}`;
+    return `https://${env.CDN_URl}.s3.${env.BUCKET_REGION}.amazonaws.com/${key}?v=${Date.now()}`;
   }
 
   async deleteFile(key: string): Promise<void> {
