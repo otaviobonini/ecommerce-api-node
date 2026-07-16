@@ -19,6 +19,13 @@ describe("Auth Controller test", () => {
     controller = new AuthController(authServiceMock);
   });
   test("Should return sucess when login", async () => {
+    authServiceMock.login.mockResolvedValue({
+      id: 1,
+      email: "test@test.com",
+      username: "test",
+      token: "token",
+      refreshToken: "refresh-token",
+    });
     const req = {
       body: {
         username: "test",
@@ -29,12 +36,23 @@ describe("Auth Controller test", () => {
     const res = {
       status: jest.fn().mockReturnThis(),
       json: jest.fn(),
+      cookie: jest.fn(),
     } as unknown as Response;
 
     await controller.login(req, res);
 
+    expect(res.cookie).toHaveBeenCalledWith(
+      "refreshToken",
+      "refresh-token",
+      expect.any(Object),
+    );
     expect(res.status).toHaveBeenCalledWith(200);
-    expect(res.json).toHaveBeenCalled();
+    expect(res.json).toHaveBeenCalledWith({
+      id: 1,
+      email: "test@test.com",
+      username: "test",
+      token: "token",
+    });
   });
   test("Should return sucess when register", async () => {
     const req = {
@@ -57,21 +75,26 @@ describe("Auth Controller test", () => {
   // refresh token controller tests
   test("Should return 204 when logout succeeds", async () => {
     const req = {
-      body: { refreshToken: "valid-token" },
+      cookies: { refreshToken: "valid-token" },
     } as unknown as Request;
     const res = {
       status: jest.fn().mockReturnThis(),
       send: jest.fn(),
+      clearCookie: jest.fn(),
     } as unknown as Response;
 
     await controller.logout(req, res);
 
     expect(authServiceMock.logout).toHaveBeenCalledWith("valid-token");
+    expect(res.clearCookie).toHaveBeenCalledWith(
+      "refreshToken",
+      expect.any(Object),
+    );
     expect(res.status).toHaveBeenCalledWith(204);
   });
 
   test("Should return 400 when logout is called without refresh token", async () => {
-    const req = { body: {} } as unknown as Request;
+    const req = { cookies: {} } as unknown as Request;
     const res = {
       status: jest.fn().mockReturnThis(),
       json: jest.fn(),
@@ -102,25 +125,30 @@ describe("Auth Controller test", () => {
       refreshToken: "new-refresh-token",
     });
     const req = {
-      body: { refreshToken: "old-token" },
+      cookies: { refreshToken: "old-token" },
     } as unknown as Request;
     const res = {
       status: jest.fn().mockReturnThis(),
       json: jest.fn(),
+      cookie: jest.fn(),
     } as unknown as Response;
 
     await controller.renewRefreshToken(req, res);
 
     expect(authServiceMock.renewRefreshToken).toHaveBeenCalledWith("old-token");
+    expect(res.cookie).toHaveBeenCalledWith(
+      "refreshToken",
+      "new-refresh-token",
+      expect.any(Object),
+    );
     expect(res.status).toHaveBeenCalledWith(200);
     expect(res.json).toHaveBeenCalledWith({
       token: "new-access-token",
-      refreshToken: "new-refresh-token",
     });
   });
 
   test("Should return 400 when renewing without refresh token", async () => {
-    const req = { body: {} } as unknown as Request;
+    const req = { cookies: {} } as unknown as Request;
     const res = {
       status: jest.fn().mockReturnThis(),
       json: jest.fn(),

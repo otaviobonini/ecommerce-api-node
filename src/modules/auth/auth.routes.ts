@@ -29,15 +29,7 @@ router.post(
   Controller.logoutAll.bind(Controller),
 );
 
-router.post(
-  "/logout",
-  validateRequest(RefreshTokenSchema, "body"),
-  Controller.logout.bind(Controller),
-);
-router.post(
-  "/refresh-token",
-  validateRequest(RefreshTokenSchema, "body"),
-  Controller.renewRefreshToken.bind(Controller),
-);
+router.post("/logout", Controller.logout.bind(Controller));
+router.post("/refresh-token", Controller.renewRefreshToken.bind(Controller));
 
 export default router;
