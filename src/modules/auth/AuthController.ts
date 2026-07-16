@@ -20,7 +20,7 @@ class AuthController {
       httpOnly: true,
       secure: env.NODE_ENV === "production",
       sameSite: "strict",
-      path: "/refresh-token", // escopo mínimo necessário
+      path: "/", // escopo mínimo necessário
       maxAge: 7 * 24 * 60 * 60 * 1000,
     });
     return res.status(200).json({
@@ -57,7 +57,7 @@ class AuthController {
       httpOnly: true,
       secure: env.NODE_ENV === "production",
       sameSite: "strict",
-      path: "/refresh-token",
+      path: "/",
       maxAge: 7 * 24 * 60 * 60 * 1000,
     });
     return res.status(200).json({ token: tokens.token });

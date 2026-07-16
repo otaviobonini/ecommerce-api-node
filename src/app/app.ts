@@ -25,6 +25,7 @@ import addressRoutes from "../modules/address/address.routes.js";
 import orderRoutes, { webhookRouter } from "../modules/order/order.routes.js";
 import { env } from "../schemas/env.schema.js";
 import { healthCheck } from "../modules/health/health.controller.js";
+import cookiesParser from "cookie-parser";
 
 const app = express();
 app.use(helmet());
@@ -41,6 +42,7 @@ app.use("/docs", swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 app.get("/health", healthCheck);
 app.use(express.json());
 
+app.use(cookiesParser());
 app.use("/", AuthLimiter, authRoutes);
 app.use("/", ProductLimiter, productRoutes);
 app.use("/", OrderLimiter, orderRoutes);
