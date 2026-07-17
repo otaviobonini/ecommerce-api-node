@@ -13,7 +13,6 @@ import categoriesRoutes from "../modules/categories/categories.routes.js";
 import productRoutes from "../modules/products/product.routes.js";
 import {
   AddressLimiter,
-  AuthLimiter,
   CartLimiter,
   OrderLimiter,
   ProductLimiter,
@@ -43,7 +42,7 @@ app.get("/health", healthCheck);
 app.use(express.json());
 
 app.use(cookiesParser());
-app.use("/", AuthLimiter, authRoutes);
+app.use("/", authRoutes);
 app.use("/", ProductLimiter, productRoutes);
 app.use("/", OrderLimiter, orderRoutes);
 app.use("/", CartLimiter, cartRoutes);
