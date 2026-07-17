@@ -15,6 +15,7 @@ jobs:
       BUCKET_REGION: "eu-west-1"
       AWS_ACCESS_KEY_ID: "your aws access key id"
       AWS_SECRET_ACCESS_KEY: "your aws secret access key"
+      CDN_URL: "https://your-cloudfront-url.com"
 
     steps:
       - name: Checkout code
