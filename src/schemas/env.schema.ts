@@ -16,7 +16,13 @@ const envSchema = z.object({
   BUCKET_REGION: z.string().nonempty(),
   AWS_ACCESS_KEY_ID: z.string().nonempty(),
   AWS_SECRET_ACCESS_KEY: z.string().nonempty(),
-  CDN_URl: z.string().nonempty(),
+  CDN_URL: z.string().nonempty(),
+  // domínio pai compartilhado entre frontend e backend (ex: ".site.com"),
+  // necessário pro cookie refreshToken ser visível pro middleware do Next.js.
+  // Sem isso, cookie fica host-only (só o host exato do backend) — o que já
+  // funciona em localhost (cookies ignoram porta), mas quebra em prod se
+  // frontend/backend estiverem em domínios diferentes.
+  COOKIE_DOMAIN: z.string().optional(),
 });
 
 export const env = envSchema.parse(process.env);

@@ -6,6 +6,18 @@ import { Request, Response } from "express";
 class AuthController {
   constructor(private service: AuthService) {}
 
+  // domain só entra se COOKIE_DOMAIN estiver setado (produção com
+  // app./api. no mesmo domínio raiz); em dev fica host-only, como já era.
+  private refreshCookieOptions() {
+    return {
+      httpOnly: true,
+      secure: env.NODE_ENV === "production",
+      sameSite: "strict" as const,
+      path: "/",
+      ...(env.COOKIE_DOMAIN ? { domain: env.COOKIE_DOMAIN } : {}),
+    };
+  }
+
   async register(req: Request, res: Response): Promise<Response> {
     const { username, email, password } = req.body as CreateUserInput;
 
@@ -17,10 +29,7 @@ class AuthController {
     const { email, password } = req.body as LoginUserInput;
     const user = await this.service.login({ email, password });
     res.cookie("refreshToken", user.refreshToken, {
-      httpOnly: true,
-      secure: env.NODE_ENV === "production",
-      sameSite: "strict",
-      path: "/", // escopo mínimo necessário
+      ...this.refreshCookieOptions(),
       maxAge: 7 * 24 * 60 * 60 * 1000,
     });
     return res.status(200).json({
@@ -44,7 +53,7 @@ class AuthController {
       return res.status(400).json({ message: "Refresh token is required" });
     }
     await this.service.logout(refreshToken);
-    res.clearCookie("refreshToken", { path: "/" });
+    res.clearCookie("refreshToken", this.refreshCookieOptions());
     return res.status(204).send();
   }
   async renewRefreshToken(req: Request, res: Response): Promise<Response> {
@@ -54,10 +63,7 @@ class AuthController {
     }
     const tokens = await this.service.renewRefreshToken(refreshToken);
     res.cookie("refreshToken", tokens.refreshToken, {
-      httpOnly: true,
-      secure: env.NODE_ENV === "production",
-      sameSite: "strict",
-      path: "/",
+      ...this.refreshCookieOptions(),
       maxAge: 7 * 24 * 60 * 60 * 1000,
     });
     return res.status(200).json({ token: tokens.token });
