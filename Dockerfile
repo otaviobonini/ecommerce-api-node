@@ -1,8 +1,30 @@
-FROM node:22-alpine
+FROM node:22-alpine AS builder
 WORKDIR /app
+ENV NODE_ENV=production
+
 COPY package*.json ./
-RUN npm install --only=production
-COPY dist/ ./dist/
-COPY prisma/ ./prisma/
+RUN npm ci 
+
+
+COPY . .
 RUN npx prisma generate
+RUN npm run build    
+
+FROM node:22-alpine AS runtime
+WORKDIR /app
+ENV NODE_ENV=production
+COPY --from=builder /app/dist ./dist
+COPY --from=builder /app/node_modules ./node_modules
+COPY --from=builder /app/prisma ./prisma
+
+
+EXPOSE 5000
+USER node
+
+
+HEALTHCHECK --interval=30s --retries=3 \
+ CMD node -e 'fetch("http://localhost:5000/health").then(res => { if (res.status !== 200) process.exit(1) }).catch(() => process.exit(1))'
+
+
+
 CMD ["node", "dist/app/server.js"]
