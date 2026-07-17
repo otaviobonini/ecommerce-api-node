@@ -12,117 +12,124 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-
 model User {
-  userId Int @id @default(autoincrement())
-  username String 
-  email String @unique
+  userId         Int            @id @default(autoincrement())
+  username       String
+  email          String         @unique
   hashedPassword String
-  role Role @default(USER)
-  order Order[]
-  cart Cart?
-  address Address[]
-  token RefreshToken[]
-
+  role           Role           @default(USER)
+  order          Order[]
+  cart           Cart?
+  address        Address[]
+  token          RefreshToken[]
 }
 
 model RefreshToken {
   id        Int      @id @default(autoincrement())
-  token     String   @unique  
-  expiresAt DateTime           
+  token     String   @unique
+  expiresAt DateTime
   userId    Int
   user      User     @relation(onDelete: Cascade, fields: [userId], references: [userId])
+
+  @@index([userId])
 }
 
 model Address {
-  addressId  Int    @id @default(autoincrement())
-  userId     Int
-  street     String
-  city       String
-  state      String
-  zipCode    String
-  isDefault  Boolean @default(false)
+  addressId Int     @id @default(autoincrement())
+  userId    Int
+  street    String
+  city      String
+  state     String
+  zipCode   String
+  isDefault Boolean @default(false)
+  user      User    @relation(onDelete: Cascade, fields: [userId], references: [userId])
+  orders    Order[]
 
-  user User @relation(onDelete: Cascade, fields: [userId], references: [userId])
-  orders Order[]
+  @@index([userId])
 }
 
 model Product {
-  productId Int @id @default(autoincrement())
-  productName String
-  productPrice Decimal
+  productId          Int            @id @default(autoincrement())
+  productName        String
+  productPrice       Decimal
   productDescription String?
-  stock Int @default(0)
-  carts CartItem[]
-  orders OrderItem[]
-  images ProductImage[]
-  isFeatured   Boolean   @default(false)   
-  categoryId   Int?
-  category     Category? @relation(fields: [categoryId], references: [categoryId])
+  stock              Int            @default(0)
+  carts              CartItem[]
+  orders             OrderItem[]
+  images             ProductImage[]
+  isFeatured         Boolean        @default(false)
+  categoryId         Int?
+  category           Category?      @relation(fields: [categoryId], references: [categoryId])
+
+  @@index([categoryId])
 }
 
 model ProductImage {
   imageId   Int     @id @default(autoincrement())
   productId Int
   url       String
-  isPrimary Boolean @default(false)  
-  
-  product Product @relation(onDelete: Cascade, fields: [productId], references: [productId])
+  isPrimary Boolean @default(false)
+  product   Product @relation(onDelete: Cascade, fields: [productId], references: [productId])
+
+  @@index([productId])
 }
 
 model Cart {
-  cartId Int @id @default(autoincrement())
-  userId Int @unique
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-  
-  user User @relation(onDelete: Cascade,references: [userId], fields: [userId])
+  cartId    Int        @id @default(autoincrement())
+  userId    Int        @unique
+  createdAt DateTime   @default(now())
+  updatedAt DateTime   @updatedAt
+  user      User       @relation(onDelete: Cascade, references: [userId], fields: [userId])
   cartItems CartItem[]
 }
 
 model CartItem {
-  cartItemId Int @id @default(autoincrement())
-  cartId Int
-  productId Int
-  quantity Int
+  cartItemId Int     @id @default(autoincrement())
+  cartId     Int
+  productId  Int
+  quantity   Int
+  cart       Cart    @relation(onDelete: Cascade, references: [cartId], fields: [cartId])
+  product    Product @relation(onDelete: Cascade, references: [productId], fields: [productId])
 
-  cart Cart @relation(onDelete: Cascade, references: [cartId], fields: [cartId])
-  product Product @relation(onDelete: Cascade, references: [productId], fields: [productId])
   @@unique([cartId, productId])
+  @@index([productId])
 }
 
 model Order {
-  orderId Int @id @default(autoincrement())
-  userId Int
-  addressId Int
-  status Status @default(PENDING)
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-  total Decimal
+  orderId     Int         @id @default(autoincrement())
+  userId      Int
+  addressId   Int
+  status      Status      @default(PENDING)
+  createdAt   DateTime    @default(now())
+  updatedAt   DateTime    @updatedAt
+  total       Decimal
   paymentLink String?
+  user        User        @relation(onDelete: Restrict, references: [userId], fields: [userId])
+  address     Address     @relation(references: [addressId], fields: [addressId])
+  orderItems  OrderItem[]
 
-  user User @relation(onDelete: Cascade,references: [userId], fields: [userId])
-  address Address @relation(references: [addressId], fields: [addressId])
-  orderItems OrderItem[]
+  @@index([addressId])
+  @@index([userId])
 }
 
 model Category {
-  categoryId   Int       @id @default(autoincrement())
-  name         String    @unique
+  categoryId    Int       @id @default(autoincrement())
+  name          String    @unique
   categoryImage String?
-  products     Product[]
+  products      Product[]
 }
 
 model OrderItem {
-  orderItemId Int @id @default(autoincrement())
-  productId Int
-  quantity Int
-  orderId Int
+  orderItemId Int     @id @default(autoincrement())
+  productId   Int
+  quantity    Int
+  orderId     Int
   priceAtTime Decimal
+  product     Product @relation(onDelete: Restrict, references: [productId], fields: [productId])
+  order       Order   @relation(onDelete: Cascade, references: [orderId], fields: [orderId])
 
-   product Product @relation(onDelete: Cascade, references: [productId], fields: [productId])
-   order Order @relation(onDelete: Cascade, references: [orderId], fields: [orderId])
-   @@unique([orderId, productId])
+  @@unique([orderId, productId])
+  @@index([productId])
 }
 
 enum Status {
@@ -131,7 +138,6 @@ enum Status {
   ONGOING
   DELIVERED
   CANCELLED
-
 }
 
 enum Role {
