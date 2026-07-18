@@ -234,4 +234,58 @@ export const orderDocs = {
       },
     },
   },
+
+  "/orders/{orderId}/status": {
+    put: {
+      summary: "Update the status of an order (admin only)",
+      tags: ["Orders"],
+      security: [{ bearerAuth: [] }],
+      parameters: [
+        {
+          name: "orderId",
+          in: "path",
+          required: true,
+          schema: { type: "integer", example: 1 },
+        },
+      ],
+      requestBody: {
+        required: true,
+        content: {
+          "application/json": {
+            schema: {
+              type: "object",
+              required: ["status"],
+              properties: {
+                status: {
+                  type: "string",
+                  enum: [
+                    "PENDING",
+                    "PAID",
+                    "ONGOING",
+                    "DELIVERED",
+                    "CANCELLED",
+                  ],
+                  example: "ONGOING",
+                },
+              },
+            },
+          },
+        },
+      },
+      responses: {
+        200: {
+          description: "Order status updated",
+        },
+        401: {
+          description: "Unauthorized",
+        },
+        403: {
+          description: "Admin role required",
+        },
+        404: {
+          description: "Order not found",
+        },
+      },
+    },
+  },
 };

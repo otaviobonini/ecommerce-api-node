@@ -76,7 +76,7 @@ export const authDocs = {
       responses: {
         200: {
           description:
-            "Login successful — copy the token and click Authorize above",
+            "Login successful — copy the token and click Authorize above. The refresh token is NOT returned in the body: it is set as an httpOnly `refreshToken` cookie (Set-Cookie).",
           content: {
             "application/json": {
               schema: {
@@ -88,10 +88,6 @@ export const authDocs = {
                   token: {
                     type: "string",
                     example: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...",
-                  },
-                  refreshToken: {
-                    type: "string",
-                    example: "550e8400-e29b-41d4-a716-446655440000",
                   },
                 },
               },
@@ -110,28 +106,14 @@ export const authDocs = {
 
   "/refresh-token": {
     post: {
-      summary: "Renew access token using a refresh token",
+      summary: "Renew access token using the refreshToken httpOnly cookie",
+      description:
+        "Reads the refresh token from the `refreshToken` httpOnly cookie (set on login), rotates it (old token is invalidated, a new cookie is issued) and returns a new access token. No request body is needed — the browser sends the cookie automatically when the request uses credentials: 'include'.",
       tags: ["Auth"],
-      requestBody: {
-        required: true,
-        content: {
-          "application/json": {
-            schema: {
-              type: "object",
-              required: ["refreshToken"],
-              properties: {
-                refreshToken: {
-                  type: "string",
-                  example: "550e8400-e29b-41d4-a716-446655440000",
-                },
-              },
-            },
-          },
-        },
-      },
       responses: {
         200: {
-          description: "Tokens renewed successfully",
+          description:
+            "Access token renewed. A rotated refreshToken cookie is set via Set-Cookie.",
           content: {
             "application/json": {
               schema: {
@@ -141,17 +123,13 @@ export const authDocs = {
                     type: "string",
                     example: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...",
                   },
-                  refreshToken: {
-                    type: "string",
-                    example: "550e8400-e29b-41d4-a716-446655440000",
-                  },
                 },
               },
             },
           },
         },
         400: {
-          description: "Refresh token is required",
+          description: "refreshToken cookie is missing",
         },
         401: {
           description: "Invalid or expired refresh token",
@@ -162,31 +140,16 @@ export const authDocs = {
 
   "/logout": {
     post: {
-      summary: "Logout — invalidate a specific refresh token",
+      summary: "Logout — invalidate the session's refresh token",
+      description:
+        "Reads the refresh token from the `refreshToken` httpOnly cookie, invalidates it server-side and clears the cookie. No request body is needed.",
       tags: ["Auth"],
-      requestBody: {
-        required: true,
-        content: {
-          "application/json": {
-            schema: {
-              type: "object",
-              required: ["refreshToken"],
-              properties: {
-                refreshToken: {
-                  type: "string",
-                  example: "550e8400-e29b-41d4-a716-446655440000",
-                },
-              },
-            },
-          },
-        },
-      },
       responses: {
         204: {
-          description: "Logged out successfully",
+          description: "Logged out successfully (cookie cleared)",
         },
         400: {
-          description: "Refresh token is required",
+          description: "refreshToken cookie is missing",
         },
       },
     },
