@@ -32,7 +32,9 @@ export class S3Gateway implements IS3Gateway {
         ContentType: mimetype,
       }),
     );
-    return `https://${env.CDN_URL}.s3.${env.BUCKET_REGION}.amazonaws.com/${key}?v=${Date.now()}`;
+    // CDN_URL é a URL base do CloudFront (ex: https://xxx.cloudfront.net);
+    // o bucket fica privado atrás do OAC e toda entrega passa pelo CDN
+    return `${env.CDN_URL}/${key}?v=${Date.now()}`;
   }
 
   async deleteFile(key: string): Promise<void> {
