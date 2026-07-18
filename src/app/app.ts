@@ -27,6 +27,10 @@ import { healthCheck } from "../modules/health/health.controller.js";
 import cookiesParser from "cookie-parser";
 
 const app = express();
+// atrás do Caddy (reverse proxy), o Express só vê o IP interno do Docker;
+// confiar em exatamente 1 salto faz req.ip vir do X-Forwarded-For real —
+// sem isso, o rate limiter põe o mundo inteiro num único balde
+app.set("trust proxy", 1);
 app.use(helmet());
 app.use(
   cors({
