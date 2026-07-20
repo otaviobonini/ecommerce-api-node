@@ -55,8 +55,8 @@ jobs:
           host: ecommerce-api.otaviobonini.dev
           username: ubuntu
           key: ${{ secrets.EC2_SSH_KEY }}
-          script_stop: true
           script: |
+            set -e
             cd ~/ecommerce-api-node
             git pull --ff-only
             docker compose -f docker-compose.prod.yml up -d --build
