@@ -42,4 +42,22 @@ jobs:
       - name: Build Docker image
         run: docker build -t ecommerce-api:ci .
 
-    
+  deploy:
+    # só roda se a CI passar, e só em push na master (PR não faz deploy)
+    needs: continuous-integration
+    if: github.ref == 'refs/heads/master' && github.event_name == 'push'
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Deploy na EC2 via SSH
+        uses: appleboy/ssh-action@v1
+        with:
+          host: ecommerce-api.otaviobonini.dev
+          username: ubuntu
+          key: ${{ secrets.EC2_SSH_KEY }}
+          script_stop: true
+          script: |
+            cd ~/ecommerce-api-node
+            git pull --ff-only
+            docker compose -f docker-compose.prod.yml up -d --build
+            docker image prune -f

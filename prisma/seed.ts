@@ -4,6 +4,18 @@ import bcrypt from "bcrypt";
 const prisma = new PrismaClient();
 
 async function main() {
+  // Este seed é destrutivo: apaga TODOS os pedidos, produtos e usuários antes
+  // de recriar os dados de exemplo. Rodá-lo contra o banco de produção apaga a
+  // loja inteira, sem confirmação. A trava abaixo existe porque o .env do
+  // servidor aponta pro banco de produção — um `npm run seed` no diretório
+  // errado, ou um step a mais no pipeline de deploy, bastaria.
+  if (process.env.NODE_ENV === "production" && !process.env.ALLOW_DESTRUCTIVE_SEED) {
+    throw new Error(
+      "Seed destrutivo bloqueado: NODE_ENV=production. " +
+        "Se isso é mesmo intencional, rode com ALLOW_DESTRUCTIVE_SEED=1.",
+    );
+  }
+
   console.log("🌱 Iniciando seed...");
 
   // ------------------------------------------------------------
