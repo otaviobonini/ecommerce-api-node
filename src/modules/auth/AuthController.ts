@@ -75,7 +75,6 @@ class AuthController {
     }
     await this.service.validateAdminSession(refreshToken);
     return res.status(200).json({ message: "Session is valid" });
-
   }
 }
 

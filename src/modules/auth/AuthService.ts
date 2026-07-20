@@ -131,27 +131,29 @@ class AuthService {
     }
     await this.auth.deleteRefreshToken(existingToken.id);
   }
-  async validateAdminSession(refreshToken: string): Promise<void>{
+  // checagem somente-leitura usada pelo middleware do front pra liberar /admin:
+  // ao contrário de renewRefreshToken, NÃO rotaciona o token — o gate roda a
+  // cada navegação e rotacionar aqui dessincronizaria o cookie do browser
+  async validateAdminSession(refreshToken: string): Promise<void> {
     const hashedRefreshToken = crypto
-  .createHash("sha256")
-  .update(refreshToken)
-  .digest("hex");
+      .createHash("sha256")
+      .update(refreshToken)
+      .digest("hex");
     const token = await this.auth.findRefreshToken(hashedRefreshToken);
     if (!token) {
       throw new AppError(401, "Invalid refresh token");
     }
     if (token.expiresAt < new Date()) {
-  await this.auth.deleteRefreshToken(token.id);
-  throw new AppError(401, "Refresh token expired");
-}
+      await this.auth.deleteRefreshToken(token.id);
+      throw new AppError(401, "Refresh token expired");
+    }
     const user = await this.auth.findUserById(token.userId);
     if (!user) {
       throw new AppError(401, "User not found");
     }
-    if (user.role !== 'ADMIN') {
+    if (user.role !== "ADMIN") {
       throw new AppError(403, "Forbidden");
     }
-
   }
 }
 

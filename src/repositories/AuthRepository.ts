@@ -69,7 +69,4 @@ export class AuthRepository implements IAuthRepository {
   async deleteRefreshTokensByUserId(userId: number) {
     return prisma.refreshToken.deleteMany({ where: { userId } });
   }
-  async findRefreshTokenByUserId(userId: number) {
-    return prisma.refreshToken.findMany({ where: { userId } });
-  }
 }
