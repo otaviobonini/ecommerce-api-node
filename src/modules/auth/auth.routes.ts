@@ -8,7 +8,7 @@ import {
 
 import { makeAuthController } from "./auth.factory.js";
 import { authMiddleware } from "../../middlewares/authMiddleware.js";
-import { AuthLimiter, RefreshLimiter } from "../../utils/rateLimit.js";
+import { AdminSessionLimiter, AuthLimiter, RefreshLimiter } from "../../utils/rateLimit.js";
 
 const Controller = makeAuthController();
 const router = Router();
@@ -39,4 +39,6 @@ router.post(
   RefreshLimiter,
   Controller.renewRefreshToken.bind(Controller),
 );
+
+router.post("/auth/admin-session", AdminSessionLimiter, Controller.validateAdminSession.bind(Controller));
 export default router;

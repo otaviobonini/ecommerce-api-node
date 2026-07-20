@@ -68,6 +68,15 @@ class AuthController {
     });
     return res.status(200).json({ token: tokens.token });
   }
+  async validateAdminSession(req: Request, res: Response): Promise<Response> {
+    const refreshToken = req.cookies.refreshToken;
+    if (!refreshToken) {
+      return res.status(400).json({ message: "Refresh token is required" });
+    }
+    await this.service.validateAdminSession(refreshToken);
+    return res.status(200).json({ message: "Session is valid" });
+
+  }
 }
 
 export default AuthController;

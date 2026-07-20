@@ -191,6 +191,7 @@ Os limites são armazenados no Redis, então valem para o conjunto de instância
 | `POST` | `/refresh-token` | Renova o access token usando o cookie httpOnly (com rotação)   |
 | `POST` | `/logout`        | Invalida o refresh token da sessão e limpa o cookie            |
 | `POST` | `/logout-all`    | 🔒 Invalida todos os refresh tokens do usuário (todos os dispositivos) |
+| `POST` | `/auth/admin-session` | Permite a checagem se o usuário é admin ou não. Deve ser usado por um middleware no front-end |
 
 ### Conta
 

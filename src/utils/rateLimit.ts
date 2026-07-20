@@ -57,6 +57,18 @@ export const CartLimiter = rateLimit({
   },
 });
 
+export const AdminSessionLimiter = rateLimit({
+  windowMs: 60 * 1000, // 1 minuto
+  max: 40,
+  store: createRedisStore("rl:admin-session:"),
+  handler: (req, res) => {
+    res.status(429).json({
+      message: "Muitas solicitações. Tente novamente em alguns minutos.",
+    });
+  },
+});
+
+
 export const OrderLimiter = rateLimit({
   windowMs: 5 * 60 * 1000, // 5 minutes
   max: 20,
