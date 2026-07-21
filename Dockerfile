@@ -19,6 +19,8 @@ RUN npm ci --omit=dev
 COPY --from=builder /app/dist ./dist
 COPY --from=builder /app/prisma ./prisma
 RUN npx prisma generate
+COPY entrypoint.sh ./
+RUN chmod +x entrypoint.sh
 
 
 EXPOSE 5000
@@ -29,5 +31,5 @@ HEALTHCHECK --interval=30s --retries=3 \
  CMD node -e 'fetch("http://localhost:5000/health").then(res => { if (res.status !== 200) process.exit(1) }).catch(() => process.exit(1))'
 
 
-
+ENTRYPOINT ["./entrypoint.sh"]
 CMD ["node", "dist/app/server.js"]
