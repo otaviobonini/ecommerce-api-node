@@ -1,6 +1,8 @@
 services:
   app:
-    build: .
+    # imagem pronta, buildada no GitHub Actions (arm64) e publicada no GHCR.
+    # O servidor não compila nada: `docker compose pull` baixa e sobe.
+    image: ghcr.io/otaviobonini/ecommerce-api-node:latest
     env_file:
       - .env
     # exposto só no loopback: o Caddy (fora do compose) faz TLS e proxy reverso
