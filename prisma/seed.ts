@@ -3,6 +3,11 @@ import bcrypt from "bcrypt";
 
 const prisma = new PrismaClient();
 
+// Imagens reais já hospedadas no S3 e servidas pelo CloudFront. As de
+// categoria foram enviadas pelo painel admin e mostram o produto de verdade —
+// melhor que placeholder aleatório para um catálogo de vitrine.
+const CDN = process.env.CDN_URL ?? "https://d3u6u0gldjzdcw.cloudfront.net";
+
 async function main() {
   // Este seed é destrutivo: apaga TODOS os pedidos, produtos e usuários antes
   // de recriar os dados de exemplo. Rodá-lo contra o banco de produção apaga a
@@ -179,37 +184,37 @@ async function main() {
       prisma.category.create({
         data: {
           name: "Periféricos",
-          categoryImage: "https://picsum.photos/seed/perifericos/300/200",
+          categoryImage: `${CDN}/categories/1/image`, // teclado + mouse sem fio
         },
       }),
       prisma.category.create({
         data: {
           name: "Cadeiras",
-          categoryImage: "https://picsum.photos/seed/cadeiras/300/200",
+          categoryImage: `${CDN}/categories/6/image`, // cadeira ergonômica de malha
         },
       }),
       prisma.category.create({
         data: {
           name: "Monitores",
-          categoryImage: "https://picsum.photos/seed/monitores/300/200",
+          categoryImage: `${CDN}/categories/3/image`, // monitor gamer
         },
       }),
       prisma.category.create({
         data: {
           name: "Áudio",
-          categoryImage: "https://picsum.photos/seed/audio/300/200",
+          categoryImage: `${CDN}/categories/5/image`, // headset over-ear
         },
       }),
       prisma.category.create({
         data: {
           name: "Redes",
-          categoryImage: "https://picsum.photos/seed/redes/300/200",
+          categoryImage: `${CDN}/categories/4/image`, // cabos de rede em patch panel
         },
       }),
       prisma.category.create({
         data: {
           name: "Armazenamento",
-          categoryImage: "https://picsum.photos/seed/armazenamento/300/200",
+          categoryImage: `${CDN}/categories/2/image`, // discos em rack de servidor
         },
       }),
     ]);
@@ -383,11 +388,16 @@ async function main() {
   // ------------------------------------------------------------
   await prisma.productImage.createMany({
     data: [
-      // Mouse Gamer RGB
+      // Mouse Gamer RGB — primária é foto real do catálogo (S3/CloudFront)
       {
         productId: mouseGamer.productId,
-        url: "https://images.unsplash.com/photo-1527814050087-3793815479db?w=800",
+        url: `${CDN}/products/15/13aaaab8-5112-4f3b-a85c-d1d0de025933`,
         isPrimary: true,
+      },
+      {
+        productId: mouseGamer.productId,
+        url: `${CDN}/products/15/3125ce07-43ff-4e0f-bade-dd1120f92514`,
+        isPrimary: false,
       },
       {
         productId: mouseGamer.productId,
@@ -502,11 +512,16 @@ async function main() {
         isPrimary: false,
       },
 
-      // Caixa de Som Bluetooth
+      // Caixa de Som Bluetooth — primária é foto real do catálogo (S3/CloudFront)
       {
         productId: caixaSom.productId,
-        url: "https://images.unsplash.com/photo-1608043152269-423dbba4e7e1?w=800",
+        url: `${CDN}/products/2/bec5eabe-667e-472a-82de-19ceb8446101`,
         isPrimary: true,
+      },
+      {
+        productId: caixaSom.productId,
+        url: `${CDN}/products/2/be82a56f-5531-4eac-887e-c9f57ac9c86a`,
+        isPrimary: false,
       },
       {
         productId: caixaSom.productId,
