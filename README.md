@@ -16,7 +16,7 @@ API construída com foco em boas práticas de arquitetura backend, incluindo:
 - Upload de imagens para S3 com entrega via CloudFront
 - Transações de banco de dados com rollback automático em caso de falha no pagamento
 - Índices em chaves estrangeiras e `onDelete: Restrict` protegendo o histórico de pedidos
-- Health check (`/health`) verificando Postgres e Redis
+- Health checks separados: `/live` (liveness, não toca no banco) e `/health` (verifica Postgres e Redis)
 - Docker multi-stage (build dentro do container, usuário não-root, HEALTHCHECK)
 - CI no GitHub Actions: build, testes e build da imagem Docker
 - Testes unitários com Jest e mocks por interface
@@ -203,7 +203,8 @@ Os limites são armazenados no Redis, então valem para o conjunto de instância
 
 | Método | Rota      | Descrição                                        |
 | ------ | --------- | ------------------------------------------------ |
-| `GET`  | `/health` | Liveness probe — verifica Postgres e Redis       |
+| `GET`  | `/live`   | Liveness probe — responde se o processo está de pé, sem consultar o banco |
+| `GET`  | `/health` | Readiness probe — verifica Postgres e Redis      |
 
 ### Produtos
 
@@ -335,7 +336,7 @@ docker build -t ecommerce-api .
 docker run -p 5000:5000 --env-file .env ecommerce-api
 ```
 
-A imagem roda com usuário não-root (`node`) e tem `HEALTHCHECK` apontando para `/health` (espera `PORT=5000`). O CI (GitHub Actions) valida o build da imagem a cada push.
+A imagem roda com usuário não-root (`node`) e tem `HEALTHCHECK` apontando para `/live` (espera `PORT=5000`). O CI (GitHub Actions) valida o build da imagem a cada push.
 
 ## Arquitetura
 

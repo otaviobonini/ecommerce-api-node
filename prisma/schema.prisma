@@ -9,7 +9,11 @@ generator client {
 
 datasource db {
   provider = "postgresql"
+  // runtime: pooler em transaction mode (porta 6543, com ?pgbouncer=true)
   url      = env("DATABASE_URL")
+  // migrations: exigem sessão persistente, que o transaction mode não dá.
+  // Aponta para o pooler em session mode (mesmo host, porta 5432).
+  directUrl = env("DIRECT_URL")
 }
 
 model User {

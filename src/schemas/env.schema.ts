@@ -4,6 +4,9 @@ const envSchema = z.object({
   PORT: z.coerce.number().default(3000),
   JWT_SECRET: z.string().nonempty(),
   DATABASE_URL: z.string().nonempty(),
+  // conexão direta (session mode), usada só pelas migrations do Prisma.
+  // Opcional: em dev, contra um Postgres local, DATABASE_URL já serve.
+  DIRECT_URL: z.string().optional(),
   NODE_ENV: z
     .enum(["development", "test", "production"])
     .default("development"),

@@ -23,7 +23,10 @@ import cartRoutes from "../modules/cart/cart.routes.js";
 import addressRoutes from "../modules/address/address.routes.js";
 import orderRoutes, { webhookRouter } from "../modules/order/order.routes.js";
 import { env } from "../schemas/env.schema.js";
-import { healthCheck } from "../modules/health/health.controller.js";
+import {
+  healthCheck,
+  liveness,
+} from "../modules/health/health.controller.js";
 import cookiesParser from "cookie-parser";
 
 const app = express();
@@ -42,9 +45,10 @@ app.use(
 app.use("/", webhookRouter);
 
 app.use("/docs", swaggerUi.serve, swaggerUi.setup(swaggerSpec));
-// Liveness sem tocar no banco: o HEALTHCHECK do Docker bate aqui a cada 30s,
-// e consultar o Postgres nessa frequência impede o Neon de escalar a zero.
-app.get("/live", (_req, res) => res.status(200).json({ status: "ok" }));
+// Liveness sem tocar no banco: é aqui que o HEALTHCHECK do Docker bate em
+// loop. Consultar o Postgres nessa frequência impede o banco de escalar a
+// zero e consome a cota mensal de compute sem ninguém acessar o site.
+app.get("/live", liveness);
 app.get("/health", healthCheck);
 app.use(express.json());
 
